@@ -7,6 +7,7 @@ import {
   getTypeBadgeClass,
   formatCurrency,
   getTypeIcon,
+  compressImage,
 } from "@/lib/utils";
 import { Plus, Pencil, Trash2, X, Loader2, Upload } from "lucide-react";
 
@@ -81,10 +82,11 @@ export default function VehiclesPage() {
     setShowForm(true);
   };
 
-  const handleImage = (file: File) => {
+  const handleImage = async (file: File) => {
     if (!file.type.startsWith("image/")) return;
-    setImageFile(file);
-    setImagePreview(URL.createObjectURL(file));
+    const compressed = await compressImage(file, 1200, 0.8);
+    setImageFile(compressed);
+    setImagePreview(URL.createObjectURL(compressed));
   };
 
   const handleDelete = async (v: Vehicle) => {
@@ -119,11 +121,10 @@ export default function VehiclesPage() {
 
     let imageUrl = editing?.image_url || "";
     if (imageFile) {
-      const ext = imageFile.name.split(".").pop() || "jpg";
-      const path = `vehicles/${crypto.randomUUID()}.${ext}`;
+      const path = `vehicles/${crypto.randomUUID()}.webp`;
       const { error: uploadErr } = await supabase.storage
         .from("vehicle-images")
-        .upload(path, imageFile);
+        .upload(path, imageFile, { contentType: "image/webp" });
       if (uploadErr) {
         setError("Failed to upload image.");
         setSaving(false);

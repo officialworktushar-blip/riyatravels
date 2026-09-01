@@ -124,13 +124,13 @@ export function compressImage(
 
         canvas.toBlob(
           (blob) => {
-            const compressed = new File([blob!], file.name, {
-              type: "image/jpeg",
+            const compressed = new File([blob!], file.name.replace(/\.[^.]+$/, ".webp"), {
+              type: "image/webp",
               lastModified: Date.now(),
             });
             resolve(compressed);
           },
-          "image/jpeg",
+          "image/webp",
           quality
         );
       };

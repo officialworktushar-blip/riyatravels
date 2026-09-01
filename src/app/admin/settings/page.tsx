@@ -3,18 +3,24 @@
 import { useEffect, useRef, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { AppSettings } from "@/lib/types";
-import { Loader2, Upload, X, Save } from "lucide-react";
+import { compressImage } from "@/lib/utils";
+import { Loader2, Upload, X, Save, Image as ImageIcon } from "lucide-react";
 
 export default function SettingsPage() {
   const [settings, setSettings] = useState<AppSettings | null>(null);
   const [upiId, setUpiId] = useState("");
   const [qrFile, setQrFile] = useState<File | null>(null);
   const [qrPreview, setQrPreview] = useState<string | null>(null);
+  const [heroHeading, setHeroHeading] = useState("");
+  const [heroSubheading, setHeroSubheading] = useState("");
+  const [heroFile, setHeroFile] = useState<File | null>(null);
+  const [heroPreview, setHeroPreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const fileRef = useRef<HTMLInputElement>(null);
+  const qrRef = useRef<HTMLInputElement>(null);
+  const heroRef = useRef<HTMLInputElement>(null);
 
   const supabase = createClient();
 
@@ -30,9 +36,13 @@ export default function SettingsPage() {
       .eq("id", 1)
       .single();
     if (data) {
-      setSettings(data as AppSettings);
-      setUpiId((data as AppSettings).upi_id || "");
-      setQrPreview((data as AppSettings).scanner_image_url);
+      const s = data as AppSettings;
+      setSettings(s);
+      setUpiId(s.upi_id || "");
+      setQrPreview(s.scanner_image_url);
+      setHeroHeading(s.hero_heading || "");
+      setHeroSubheading(s.hero_subheading || "");
+      setHeroPreview(s.hero_image_url);
     }
     setLoading(false);
   };
@@ -41,6 +51,13 @@ export default function SettingsPage() {
     if (!file.type.startsWith("image/")) return;
     setQrFile(file);
     setQrPreview(URL.createObjectURL(file));
+  };
+
+  const handleHeroImage = async (file: File) => {
+    if (!file.type.startsWith("image/")) return;
+    const compressed = await compressImage(file, 1600, 0.82);
+    setHeroFile(compressed);
+    setHeroPreview(URL.createObjectURL(compressed));
   };
 
   const handleSave = async (e: React.FormEvent) => {
@@ -67,11 +84,31 @@ export default function SettingsPage() {
       scannerUrl = urlData.publicUrl;
     }
 
+    let heroUrl = settings?.hero_image_url || "";
+    if (heroFile) {
+      const path = `hero/${crypto.randomUUID()}.webp`;
+      const { error: uploadErr } = await supabase.storage
+        .from("site-content")
+        .upload(path, heroFile, { contentType: "image/webp" });
+      if (uploadErr) {
+        setError("Failed to upload hero image.");
+        setSaving(false);
+        return;
+      }
+      const { data: urlData } = supabase.storage
+        .from("site-content")
+        .getPublicUrl(path);
+      heroUrl = urlData.publicUrl;
+    }
+
     const { error: updateErr } = await supabase
       .from("app_settings")
       .update({
         upi_id: upiId.trim() || null,
         scanner_image_url: scannerUrl || null,
+        hero_heading: heroHeading.trim() || null,
+        hero_subheading: heroSubheading.trim() || null,
+        hero_image_url: heroUrl || null,
       })
       .eq("id", 1);
 
@@ -96,7 +133,7 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="max-w-lg">
+    <div className="max-w-2xl">
       <h2 className="mb-6 text-xl font-bold text-navy-700">Settings</h2>
 
       {error && (
@@ -110,71 +147,141 @@ export default function SettingsPage() {
         </div>
       )}
 
-      <div className="card p-6">
-        <form onSubmit={handleSave} className="space-y-6">
-          {/* UPI ID */}
-          <div>
-            <label className="label-text">UPI ID</label>
-            <input
-              type="text"
-              className="input-field"
-              placeholder="riyatravels@upi"
-              value={upiId}
-              onChange={(e) => setUpiId(e.target.value)}
-            />
-            <p className="mt-1 text-xs text-gray-400">
-              Shown on the payment page for public bookings.
-            </p>
-          </div>
-
-          {/* QR Scanner */}
-          <div>
-            <label className="label-text">UPI QR Code</label>
-            {qrPreview ? (
-              <div className="relative inline-block">
-                <div className="rounded-lg border border-gray-200 p-2">
-                  <img src={qrPreview} alt="QR Code" className="h-40 w-40 object-contain" />
+      <form onSubmit={handleSave} className="space-y-8">
+        {/* ── Homepage Hero ── */}
+        <div className="card p-6">
+          <h3 className="mb-4 text-lg font-semibold text-navy-700">Homepage Hero</h3>
+          <div className="space-y-4">
+            <div>
+              <label className="label-text">Hero Heading</label>
+              <input
+                type="text"
+                className="input-field"
+                placeholder="e.g. Ride with Freedom"
+                value={heroHeading}
+                onChange={(e) => setHeroHeading(e.target.value)}
+              />
+            </div>
+            <div>
+              <label className="label-text">Hero Subheading</label>
+              <textarea
+                className="input-field min-h-[80px]"
+                placeholder="e.g. Affordable scooters, bikes & cars on rent..."
+                value={heroSubheading}
+                onChange={(e) => setHeroSubheading(e.target.value)}
+              />
+            </div>
+            <div>
+              <label className="label-text">Hero Image</label>
+              {heroPreview ? (
+                <div className="relative inline-block">
+                  <div className="overflow-hidden rounded-lg border border-gray-200">
+                    <img
+                      src={heroPreview}
+                      alt="Hero"
+                      className="h-48 w-full object-cover"
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setHeroPreview(null);
+                      setHeroFile(null);
+                    }}
+                    className="absolute right-2 top-2 rounded-full bg-red-500 p-1 text-white hover:bg-red-600"
+                  >
+                    <X size={14} />
+                  </button>
                 </div>
+              ) : (
                 <button
                   type="button"
-                  onClick={() => {
-                    setQrPreview(null);
-                    setQrFile(null);
-                  }}
-                  className="absolute -right-2 -top-2 rounded-full bg-red-500 p-1 text-white hover:bg-red-600"
+                  onClick={() => heroRef.current?.click()}
+                  className="flex h-40 w-full flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 text-gray-400 transition-colors hover:border-gold-400 hover:text-gold-500"
                 >
-                  <X size={14} />
+                  <ImageIcon size={24} />
+                  <span className="mt-2 text-xs">Upload Hero Image</span>
                 </button>
-              </div>
-            ) : (
-              <button
-                type="button"
-                onClick={() => fileRef.current?.click()}
-                className="flex h-32 w-40 flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 text-gray-400 transition-colors hover:border-gold-400 hover:text-gold-500"
-              >
-                <Upload size={24} />
-                <span className="mt-2 text-xs">Upload QR</span>
-              </button>
-            )}
-            <input
-              ref={fileRef}
-              type="file"
-              accept="image/*"
-              className="hidden"
-              onChange={(e) => e.target.files?.[0] && handleQr(e.target.files[0])}
-            />
+              )}
+              <input
+                ref={heroRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={(e) => e.target.files?.[0] && handleHeroImage(e.target.files[0])}
+              />
+              <p className="mt-1 text-xs text-gray-400">
+                Recommended: 1600×800px, webp format for best performance.
+              </p>
+            </div>
           </div>
+        </div>
 
-          <button type="submit" disabled={saving} className="btn-primary w-full">
-            {saving ? (
-              <Loader2 size={16} className="animate-spin" />
-            ) : (
-              <Save size={16} className="mr-1" />
-            )}
-            Save Settings
-          </button>
-        </form>
-      </div>
+        {/* ── Payment Settings ── */}
+        <div className="card p-6">
+          <h3 className="mb-4 text-lg font-semibold text-navy-700">Payment Settings</h3>
+          <div className="space-y-4">
+            <div>
+              <label className="label-text">UPI ID</label>
+              <input
+                type="text"
+                className="input-field"
+                placeholder="riyatravels@upi"
+                value={upiId}
+                onChange={(e) => setUpiId(e.target.value)}
+              />
+              <p className="mt-1 text-xs text-gray-400">
+                Shown on the payment page for public bookings.
+              </p>
+            </div>
+            <div>
+              <label className="label-text">UPI QR Code</label>
+              {qrPreview ? (
+                <div className="relative inline-block">
+                  <div className="rounded-lg border border-gray-200 p-2">
+                    <img src={qrPreview} alt="QR Code" className="h-40 w-40 object-contain" />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setQrPreview(null);
+                      setQrFile(null);
+                    }}
+                    className="absolute -right-2 -top-2 rounded-full bg-red-500 p-1 text-white hover:bg-red-600"
+                  >
+                    <X size={14} />
+                  </button>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => qrRef.current?.click()}
+                  className="flex h-32 w-40 flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 text-gray-400 transition-colors hover:border-gold-400 hover:text-gold-500"
+                >
+                  <Upload size={24} />
+                  <span className="mt-2 text-xs">Upload QR</span>
+                </button>
+              )}
+              <input
+                ref={qrRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={(e) => e.target.files?.[0] && handleQr(e.target.files[0])}
+              />
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" disabled={saving} className="btn-primary w-full">
+          {saving ? (
+            <Loader2 size={16} className="animate-spin" />
+          ) : (
+            <Save size={16} className="mr-1" />
+          )}
+          Save Settings
+        </button>
+      </form>
     </div>
   );
 }

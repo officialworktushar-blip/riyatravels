@@ -47,7 +47,19 @@ export interface AppSettings {
   id: number;
   upi_id: string | null;
   scanner_image_url: string | null;
+  hero_image_url: string | null;
+  hero_heading: string | null;
+  hero_subheading: string | null;
   updated_at: string;
+}
+
+export interface Testimonial {
+  id: string;
+  customer_name: string;
+  rating: number;
+  comment: string;
+  is_active: boolean;
+  created_at: string;
 }
 
 export interface BlockedSlot {

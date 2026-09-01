@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "File and bucket are required" }, { status: 400 });
     }
 
-    const allowedBuckets = ["vehicle-images", "scanner-qr", "licenses", "payment-proofs"];
+    const allowedBuckets = ["vehicle-images", "scanner-qr", "licenses", "payment-proofs", "site-content"];
     if (!allowedBuckets.includes(bucket)) {
       return NextResponse.json({ error: "Invalid bucket" }, { status: 400 });
     }
@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
     }
 
     // For public buckets, return the public URL
-    if (bucket === "vehicle-images" || bucket === "scanner-qr") {
+    if (bucket === "vehicle-images" || bucket === "scanner-qr" || bucket === "site-content") {
       const { data: urlData } = supabase.storage
         .from(bucket)
         .getPublicUrl(data.path);

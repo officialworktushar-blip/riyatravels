@@ -9,6 +9,7 @@ import {
   Car,
   CalendarDays,
   Settings,
+  Star,
   LogOut,
   Menu,
   X,
@@ -19,6 +20,7 @@ const NAV_ITEMS = [
   { href: "/admin/vehicles", label: "Vehicles", icon: Car },
   { href: "/admin/availability", label: "Availability", icon: CalendarDays },
   { href: "/admin/settings", label: "Settings", icon: Settings },
+  { href: "/admin/testimonials", label: "Testimonials", icon: Star },
 ];
 
 export default function AdminLayout({
@@ -57,7 +59,11 @@ export default function AdminLayout({
   }
 
   return (
-    <div className="flex min-h-screen bg-[#F7F7F5]">
+    <>
+      <head>
+        <meta name="robots" content="noindex, nofollow" />
+      </head>
+      <div className="flex min-h-screen bg-[#F7F7F5]">
       {/* Sidebar (desktop) */}
       <aside className="hidden w-64 shrink-0 flex-col bg-navy-700 text-white md:flex">
         <div className="flex h-16 items-center border-b border-white/10 px-6">
@@ -165,5 +171,6 @@ export default function AdminLayout({
         <main className="flex-1 p-4 md:p-8">{children}</main>
       </div>
     </div>
+    </>
   );
 }

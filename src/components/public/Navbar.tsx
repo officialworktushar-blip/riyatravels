@@ -24,9 +24,6 @@ export default function Navbar() {
           <a href="#vehicles" className="text-sm font-medium text-navy-600 hover:text-gold-400 transition-colors">
             Vehicles
           </a>
-          <Link href="/admin/login" className="text-sm font-medium text-navy-600 hover:text-gold-400 transition-colors">
-            Admin
-          </Link>
         </div>
 
         {/* Mobile toggle */}
@@ -56,13 +53,6 @@ export default function Navbar() {
           >
             Vehicles
           </a>
-          <Link
-            href="/admin/login"
-            className="block py-2 text-sm font-medium text-navy-600"
-            onClick={() => setMobileOpen(false)}
-          >
-            Admin
-          </Link>
         </div>
       )}
     </nav>
