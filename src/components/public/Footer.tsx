@@ -1,5 +1,6 @@
 import { Facebook, Instagram, Twitter, Phone, Mail } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Footer() {
   const year = new Date().getFullYear();
@@ -10,9 +11,20 @@ export default function Footer() {
         <div className="grid gap-10 md:grid-cols-3">
           {/* Brand */}
           <div>
-            <span className="text-2xl font-bold text-white">
-              Riya<span className="text-gold-400">Travels</span>
-            </span>
+            <div className="flex items-center gap-3">
+              <div className="overflow-hidden rounded-xl bg-white p-1.5 shadow-sm">
+                <Image
+                  src="/rt_logo.jpeg"
+                  alt="Riya Travels"
+                  width={44}
+                  height={44}
+                  className="h-11 w-11 rounded-lg"
+                />
+              </div>
+              <span className="text-2xl font-bold text-white">
+                Riya<span className="text-gold-400">Travels</span>
+              </span>
+            </div>
             <p className="mt-3 max-w-xs text-sm">
               Your trusted partner for affordable vehicle rentals
             </p>
@@ -67,10 +79,10 @@ export default function Footer() {
               <li className="flex items-center gap-2">
                 <Mail size={16} className="text-gold-400" />
                 <a
-                  href="mailto:hello@riyatravels.com"
+                  href="mailto:scooty.riyatravels@gmail.com"
                   className="transition-colors hover:text-gold-400"
                 >
-                  hello@riyatravels.com
+                  scooty.riyatravels@gmail.com
                 </a>
               </li>
               <li className="pt-2">

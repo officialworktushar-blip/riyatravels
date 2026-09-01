@@ -58,8 +58,7 @@ export default async function HomePage() {
         )}
 
         {/* Readability overlays */}
-        <div className="absolute inset-0 bg-navy-700/50" />
-        <div className="absolute inset-0 bg-gradient-to-t from-navy-700/90 via-navy-700/30 to-navy-700/40" />
+        <div className="absolute inset-0 bg-gradient-to-b from-navy-900/55 via-navy-900/10 to-navy-900/55" />
 
         {/* Content */}
         <div className="relative mx-auto flex min-h-[320px] max-w-7xl flex-col items-center justify-center px-4 py-16 text-center sm:min-h-[420px] sm:py-20 lg:min-h-[520px]">
@@ -81,8 +80,6 @@ export default async function HomePage() {
             {heroSubheading}
           </p>
         </div>
-
-        <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-[var(--color-bg)] to-transparent" />
       </section>
 
       {/* Vehicles */}

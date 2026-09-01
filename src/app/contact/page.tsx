@@ -81,10 +81,10 @@ export default function ContactPage() {
             <h2 className="text-lg font-semibold text-navy-700">Email</h2>
             <p className="mt-2 text-sm text-gray-500">For bookings &amp; enquiries</p>
             <a
-              href="mailto:hello@riyatravels.com"
+              href="mailto:scooty.riyatravels@gmail.com"
               className="mt-5 inline-block font-medium text-gold-500 hover:underline"
             >
-              hello@riyatravels.com
+              scooty.riyatravels@gmail.com
             </a>
           </div>
 

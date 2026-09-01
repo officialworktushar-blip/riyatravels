@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 
@@ -10,10 +11,17 @@ export default function Navbar() {
   return (
     <nav className="sticky top-0 z-50 border-b border-gray-200 bg-white/95 backdrop-blur-sm">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4">
-        <Link href="/" className="flex items-center gap-2">
-          <span className="text-2xl font-bold text-navy-700">
-            Riya<span className="text-gold-400">Travels</span>
-          </span>
+        <Link href="/" className="flex items-center" aria-label="Riya Travels home">
+          <div className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm ring-1 ring-gray-100">
+            <Image
+              src="/rt_logo.jpeg"
+              alt="Riya Travels"
+              width={40}
+              height={40}
+              className="h-10 w-10 sm:h-11 sm:w-11"
+              priority
+            />
+          </div>
         </Link>
 
         {/* Desktop */}
