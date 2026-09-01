@@ -70,34 +70,40 @@ export default function SettingsPage() {
     if (qrFile) {
       const ext = qrFile.name.split(".").pop() || "jpg";
       const path = `qr/${crypto.randomUUID()}.${ext}`;
-      const { error: uploadErr } = await supabase.storage
+      const { data: qrData, error: uploadErr } = await supabase.storage
         .from("scanner-qr")
         .upload(path, qrFile);
       if (uploadErr) {
-        setError("Failed to upload QR image.");
+        console.error("QR image upload failed:", uploadErr);
+        setError(
+          `QR image upload failed: ${uploadErr.message ?? "unknown error"}`
+        );
         setSaving(false);
         return;
       }
       const { data: urlData } = supabase.storage
         .from("scanner-qr")
-        .getPublicUrl(path);
+        .getPublicUrl(qrData.path);
       scannerUrl = urlData.publicUrl;
     }
 
     let heroUrl = settings?.hero_image_url || "";
     if (heroFile) {
       const path = `hero/${crypto.randomUUID()}.webp`;
-      const { error: uploadErr } = await supabase.storage
+      const { data: heroData, error: uploadErr } = await supabase.storage
         .from("site-content")
         .upload(path, heroFile, { contentType: "image/webp" });
       if (uploadErr) {
-        setError("Failed to upload hero image.");
+        console.error("Hero image upload failed:", uploadErr);
+        setError(
+          `Hero image upload failed: ${uploadErr.message ?? "unknown error"}`
+        );
         setSaving(false);
         return;
       }
       const { data: urlData } = supabase.storage
         .from("site-content")
-        .getPublicUrl(path);
+        .getPublicUrl(heroData.path);
       heroUrl = urlData.publicUrl;
     }
 

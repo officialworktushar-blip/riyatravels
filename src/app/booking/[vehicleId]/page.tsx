@@ -102,7 +102,12 @@ export default function BookingPage() {
         const { error: uploadErr } = await supabase.storage
           .from("licenses")
           .upload(path, data.licenseFront);
-        if (uploadErr) throw new Error("Failed to upload license front");
+        if (uploadErr) {
+          console.error("License front upload failed:", uploadErr);
+          throw new Error(
+            `Failed to upload license front: ${uploadErr.message ?? "unknown error"}`
+          );
+        }
         licenseFrontUrl = path;
       }
 
@@ -113,7 +118,12 @@ export default function BookingPage() {
         const { error: uploadErr } = await supabase.storage
           .from("licenses")
           .upload(path, data.licenseBack);
-        if (uploadErr) throw new Error("Failed to upload license back");
+        if (uploadErr) {
+          console.error("License back upload failed:", uploadErr);
+          throw new Error(
+            `Failed to upload license back: ${uploadErr.message ?? "unknown error"}`
+          );
+        }
         licenseBackUrl = path;
       }
 
@@ -124,7 +134,12 @@ export default function BookingPage() {
         const { error: uploadErr } = await supabase.storage
           .from("payment-proofs")
           .upload(path, data.paymentScreenshot);
-        if (uploadErr) throw new Error("Failed to upload payment screenshot");
+        if (uploadErr) {
+          console.error("Payment screenshot upload failed:", uploadErr);
+          throw new Error(
+            `Failed to upload payment screenshot: ${uploadErr.message ?? "unknown error"}`
+          );
+        }
         paymentUrl = path;
       }
 

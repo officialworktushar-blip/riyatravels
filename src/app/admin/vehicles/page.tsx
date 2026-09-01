@@ -122,17 +122,20 @@ export default function VehiclesPage() {
     let imageUrl = editing?.image_url || "";
     if (imageFile) {
       const path = `vehicles/${crypto.randomUUID()}.webp`;
-      const { error: uploadErr } = await supabase.storage
+      const { data: uploadData, error: uploadErr } = await supabase.storage
         .from("vehicle-images")
         .upload(path, imageFile, { contentType: "image/webp" });
       if (uploadErr) {
-        setError("Failed to upload image.");
+        console.error("Vehicle image upload failed:", uploadErr);
+        setError(
+          `Image upload failed: ${uploadErr.message ?? "unknown error"}`
+        );
         setSaving(false);
         return;
       }
       const { data: urlData } = supabase.storage
         .from("vehicle-images")
-        .getPublicUrl(path);
+        .getPublicUrl(uploadData.path);
       imageUrl = urlData.publicUrl;
     }
 

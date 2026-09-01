@@ -25,7 +25,10 @@ export async function POST(request: NextRequest) {
       .upload(path, file, { contentType: file.type });
 
     if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      return NextResponse.json(
+        { error: `Upload failed: ${error.message ?? "unknown error"}` },
+        { status: 500 }
+      );
     }
 
     // For public buckets, return the public URL
@@ -37,7 +40,10 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json({ path: data.path });
-  } catch {
-    return NextResponse.json({ error: "Upload failed" }, { status: 500 });
+  } catch (err) {
+    console.error("Upload API error:", err);
+    const message =
+      err instanceof Error ? err.message : "Upload failed";
+    return NextResponse.json({ error: `Upload failed: ${message}` }, { status: 500 });
   }
 }
