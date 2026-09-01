@@ -49,7 +49,7 @@ Open [http://localhost:3000](http://localhost:3000).
 
 Run the migration in `supabase/migrations/001_hero_testimonials.sql` against your Supabase project (via the SQL Editor in the Supabase Dashboard). This adds:
 
-- `hero_image_url`, `hero_heading`, `hero_subheading` columns to the `app_settings` table.
+- `hero_image_url` column to the `app_settings` table.
 - A new `testimonials` table with RLS (public can read active testimonials; admin has full access).
 
 You also need to create a **`site-content`** storage bucket (public) for the hero image. The existing `vehicle-images` and `scanner-qr` buckets should already be public.
@@ -177,7 +177,7 @@ All `/admin/*` routes (except `/admin/login`) are protected by `src/middleware.t
 | `vehicles` | id, type, name, image_url, rate_per_hour, rate_per_day, is_active | Public read via RLS |
 | `bookings` | id, customer_*, vehicle_id, start/end_time, amount, status, admin_note | Public insert only; admin manages status |
 | `blocked_slots` | id, vehicle_id, start/end_time, reason | Admin only |
-| `app_settings` | id=1 (single row), upi_id, scanner_image_url, hero_image_url, hero_heading, hero_subheading | Admin-managed |
+| `app_settings` | id=1 (single row), upi_id, scanner_image_url, hero_image_url | Admin-managed |
 | `testimonials` | id, customer_name, rating (1-5), comment, is_active, created_at | Public read (active only); admin full access |
 
 ### Views

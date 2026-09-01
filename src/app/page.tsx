@@ -9,10 +9,6 @@ import Image from "next/image";
 
 export const revalidate = 60;
 
-const DEFAULT_HERO_HEADING = "Ride with Freedom";
-const DEFAULT_HERO_SUBHEADING =
-  "Affordable scooters, bikes & cars on rent. Pick your ride, choose your time, and go.";
-
 export default async function HomePage() {
   const supabase = await createClient();
 
@@ -23,7 +19,7 @@ export default async function HomePage() {
       .eq("is_active", true)
       .order("type")
       .order("name"),
-    supabase.from("app_settings").select("*").eq("id", 1).single(),
+    supabase.from("app_settings").select("hero_image_url").eq("id", 1).single(),
     supabase
       .from("testimonials")
       .select("*")
@@ -33,12 +29,10 @@ export default async function HomePage() {
   ]);
 
   const vehicles = (vehiclesRes.data as Vehicle[]) ?? [];
-  const settings = settingsRes.data as Record<string, unknown> | null;
+  const settings = settingsRes.data as { hero_image_url: string | null } | null;
   const testimonials = (testimonialsRes.data as Testimonial[]) ?? [];
 
-  const heroHeading = (settings?.hero_heading as string) || DEFAULT_HERO_HEADING;
-  const heroSubheading = (settings?.hero_subheading as string) || DEFAULT_HERO_SUBHEADING;
-  const heroImageUrl = settings?.hero_image_url as string | null;
+  const heroImageUrl = settings?.hero_image_url ?? null;
 
   return (
     <div>
@@ -47,7 +41,7 @@ export default async function HomePage() {
         {heroImageUrl ? (
           <Image
             src={heroImageUrl}
-            alt={heroHeading}
+            alt="Riya Travels"
             fill
             className="object-cover object-center"
             sizes="100vw"
@@ -56,29 +50,6 @@ export default async function HomePage() {
         ) : (
           <div className="absolute inset-0 bg-[url('/noise.svg')] opacity-5" />
         )}
-
-        {/* Content with contrast card */}
-        <div className="relative flex h-full w-full items-center justify-center px-4 text-center">
-          <div className="max-w-3xl rounded-2xl bg-[#16233F]/60 px-6 py-6 shadow-lg backdrop-blur-sm sm:px-10 sm:py-8">
-            <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
-              {heroHeading.split(" ").map((word, i) => {
-                const isGold =
-                  word.toLowerCase() === "freedom" ||
-                  i === heroHeading.split(" ").length - 1;
-                return isGold ? (
-                  <span key={i} className="text-gold-400">
-                    {word}{" "}
-                  </span>
-                ) : (
-                  <span key={i}>{word} </span>
-                );
-              })}
-            </h1>
-            <p className="mx-auto mt-4 max-w-2xl text-lg text-gray-100 sm:text-xl">
-              {heroSubheading}
-            </p>
-          </div>
-        </div>
       </section>
 
       {/* Vehicles */}

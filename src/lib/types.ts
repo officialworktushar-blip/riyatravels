@@ -48,8 +48,6 @@ export interface AppSettings {
   upi_id: string | null;
   scanner_image_url: string | null;
   hero_image_url: string | null;
-  hero_heading: string | null;
-  hero_subheading: string | null;
   updated_at: string;
 }
 

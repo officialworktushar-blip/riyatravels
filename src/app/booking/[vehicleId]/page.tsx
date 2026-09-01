@@ -69,7 +69,7 @@ export default function BookingPage() {
     async function load() {
       const [vehicleRes, settingsRes] = await Promise.all([
         supabase.from("vehicles").select("*").eq("id", vehicleId).single(),
-        supabase.from("app_settings").select("*").eq("id", 1).single(),
+        supabase.from("app_settings").select("upi_id, scanner_image_url").eq("id", 1).single(),
       ]);
       setVehicle(vehicleRes.data as Vehicle);
       setSettings(settingsRes.data as AppSettings);

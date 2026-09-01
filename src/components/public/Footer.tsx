@@ -14,7 +14,7 @@ export default function Footer() {
             <div className="flex items-center gap-3">
               <div className="overflow-hidden rounded-xl bg-white p-1.5 shadow-sm">
                 <Image
-                  src="/rt_logo.jpeg"
+                  src="/rt_logo.webp"
                   alt="Riya Travels"
                   width={44}
                   height={44}

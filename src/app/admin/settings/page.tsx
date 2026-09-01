@@ -11,8 +11,6 @@ export default function SettingsPage() {
   const [upiId, setUpiId] = useState("");
   const [qrFile, setQrFile] = useState<File | null>(null);
   const [qrPreview, setQrPreview] = useState<string | null>(null);
-  const [heroHeading, setHeroHeading] = useState("");
-  const [heroSubheading, setHeroSubheading] = useState("");
   const [heroFile, setHeroFile] = useState<File | null>(null);
   const [heroPreview, setHeroPreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -40,8 +38,6 @@ export default function SettingsPage() {
       setSettings(s);
       setUpiId(s.upi_id || "");
       setQrPreview(s.scanner_image_url);
-      setHeroHeading(s.hero_heading || "");
-      setHeroSubheading(s.hero_subheading || "");
       setHeroPreview(s.hero_image_url);
     }
     setLoading(false);
@@ -112,8 +108,6 @@ export default function SettingsPage() {
       .update({
         upi_id: upiId.trim() || null,
         scanner_image_url: scannerUrl || null,
-        hero_heading: heroHeading.trim() || null,
-        hero_subheading: heroSubheading.trim() || null,
         hero_image_url: heroUrl || null,
       })
       .eq("id", 1);
@@ -158,25 +152,6 @@ export default function SettingsPage() {
         <div className="card p-6">
           <h3 className="mb-4 text-lg font-semibold text-navy-700">Homepage Hero</h3>
           <div className="space-y-4">
-            <div>
-              <label className="label-text">Hero Heading</label>
-              <input
-                type="text"
-                className="input-field"
-                placeholder="e.g. Ride with Freedom"
-                value={heroHeading}
-                onChange={(e) => setHeroHeading(e.target.value)}
-              />
-            </div>
-            <div>
-              <label className="label-text">Hero Subheading</label>
-              <textarea
-                className="input-field min-h-[80px]"
-                placeholder="e.g. Affordable scooters, bikes & cars on rent..."
-                value={heroSubheading}
-                onChange={(e) => setHeroSubheading(e.target.value)}
-              />
-            </div>
             <div>
               <label className="label-text">Hero Image</label>
               {heroPreview ? (

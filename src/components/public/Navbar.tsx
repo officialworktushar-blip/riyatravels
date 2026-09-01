@@ -14,7 +14,7 @@ export default function Navbar() {
         <Link href="/" className="flex items-center" aria-label="Riya Travels home">
           <div className="overflow-hidden rounded-lg bg-white shadow-sm ring-1 ring-white/20">
             <Image
-              src="/rt_logo.jpeg"
+              src="/rt_logo.webp"
               alt="Riya Travels"
               width={40}
               height={40}
