@@ -70,6 +70,8 @@ Admin accounts are created manually in Supabase Auth (there is **no public sign-
 src/
 ├── app/
 │   ├── page.tsx                  # Public homepage (hero, fleet, how-it-works, testimonials, FAQ)
+│   ├── about/page.tsx            # About page (story, values, why rent with us)
+│   ├── contact/page.tsx          # Contact page (WhatsApp, email, map placeholder, hours)
 │   ├── booking/[vehicleId]/      # Multi-step public booking flow
 │   ├── admin/
 │   │   ├── layout.tsx            # Admin shell (sidebar + auth, noindex meta tag)
@@ -86,10 +88,9 @@ src/
 │       └── send-confirmation/    # Gmail SMTP confirmation email on approve
 ├── components/
 │   ├── public/
-│   │   ├── Navbar.tsx            # Sticky nav (no admin links)
+│   │   ├── Navbar.tsx            # Sticky nav (no admin links; Home, Vehicles, About, Contact)
 │   │   ├── VehicleCard.tsx       # Image + rates + Book Now (uses next/image)
 │   │   ├── VehicleGrid.tsx       # Filter pills + responsive grid
-│   │   ├── FleetGallery.tsx      # Masonry-style gallery of active vehicles
 │   │   ├── HowItWorks.tsx        # 4-step visual guide
 │   │   ├── WhyChoose.tsx         # Feature grid (4 benefits)
 │   │   ├── Testimonials.tsx      # Star-rated customer quotes
@@ -110,16 +111,22 @@ public/
 
 ---
 
-## Public Homepage Sections
+## Public Pages
 
-1. **Hero** — Admin-manageable heading, subheading, and background image (pulled from `app_settings`).
+| Page | Route | Content |
+|------|-------|---------|
+| Home | `/` | Hero (admin-manageable heading/subheading/image), Our Fleet, How It Works, Why Choose, Testimonials, FAQ |
+| About | `/about` | Story, mission/values cards, why rent with us, CTA to fleet & contact |
+| Contact | `/contact` | WhatsApp button (wa.me), email, address placeholder, embedded map placeholder, business hours, FAQ prompt |
+
+### Public Homepage Sections
+
+1. **Hero** — Admin-manageable heading, subheading, and background image. Rendered as a full-bleed landscape banner (responsive `min-h` heights for mobile/desktop) with `next/image` `fill` + `object-cover`, plus a navy overlay + gradient for text readability.
 2. **Our Fleet** — Vehicle grid with type filter pills and Book Now cards.
-3. **Fleet Gallery** — Masonry-style photo grid of active vehicles (up to 8, using next/image).
-4. **How It Works** — 4-step visual: Choose Ride → Upload License → Pay via UPI → Get Confirmed.
-5. **Why Choose Riya Travels** — 4-column feature grid (Wide Fleet, Easy UPI, Quick Verification, WhatsApp Support).
-6. **Testimonials** — Star-rated customer quotes (admin-managed, stored in `testimonials` table).
-7. **FAQ** — Accordion with 6 common questions and answers.
-8. **Footer** — Brand name, tagline, contact info, social link placeholders.
+3. **How It Works** — 4-step visual: Choose Ride → Upload License → Pay via UPI → Get Confirmed.
+4. **Why Choose Riya Travels** — 4-column feature grid (Wide Fleet, Easy UPI, Quick Verification, WhatsApp Support).
+5. **Testimonials** — Star-rated customer quotes (admin-managed, stored in `testimonials` table).
+6. **FAQ** — Accordion with 6 common questions and answers (`#faq` anchor).
 
 ---
 

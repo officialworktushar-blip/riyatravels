@@ -1,4 +1,5 @@
 import { Facebook, Instagram, Twitter, Phone, Mail } from "lucide-react";
+import Link from "next/link";
 
 export default function Footer() {
   const year = new Date().getFullYear();
@@ -24,14 +25,24 @@ export default function Footer() {
             </h3>
             <ul className="mt-4 space-y-2 text-sm">
               <li>
-                <a href="#top" className="transition-colors hover:text-gold-400">
+                <Link href="/" className="transition-colors hover:text-gold-400">
                   Home
-                </a>
+                </Link>
               </li>
               <li>
                 <a href="#vehicles" className="transition-colors hover:text-gold-400">
                   Vehicles
                 </a>
+              </li>
+              <li>
+                <Link href="/about" className="transition-colors hover:text-gold-400">
+                  About
+                </Link>
+              </li>
+              <li>
+                <Link href="/contact" className="transition-colors hover:text-gold-400">
+                  Contact
+                </Link>
               </li>
             </ul>
           </div>
@@ -44,7 +55,14 @@ export default function Footer() {
             <ul className="mt-4 space-y-3 text-sm">
               <li className="flex items-center gap-2">
                 <Phone size={16} className="text-gold-400" />
-                <span>+91 XXXXX XXXXX</span>
+                <a
+                  href="https://wa.me/91XXXXXXXXXX"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="transition-colors hover:text-gold-400"
+                >
+                  +91 XXXXX XXXXX
+                </a>
               </li>
               <li className="flex items-center gap-2">
                 <Mail size={16} className="text-gold-400" />

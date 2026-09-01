@@ -1,7 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { Vehicle, Testimonial } from "@/lib/types";
 import VehicleGrid from "@/components/public/VehicleGrid";
-import FleetGallery from "@/components/public/FleetGallery";
 import HowItWorks from "@/components/public/HowItWorks";
 import WhyChoose from "@/components/public/WhyChoose";
 import TestimonialsSection from "@/components/public/Testimonials";
@@ -48,45 +47,49 @@ export default async function HomePage() {
         {heroImageUrl ? (
           <Image
             src={heroImageUrl}
-            alt="Riya Travels"
+            alt={heroHeading}
             fill
-            className="object-cover opacity-30"
+            className="object-cover object-center"
             sizes="100vw"
             priority
           />
         ) : (
           <div className="absolute inset-0 bg-[url('/noise.svg')] opacity-5" />
         )}
-        <div className="relative mx-auto max-w-7xl px-4 py-20 text-center sm:py-28">
-          <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
+
+        {/* Readability overlays */}
+        <div className="absolute inset-0 bg-navy-700/50" />
+        <div className="absolute inset-0 bg-gradient-to-t from-navy-700/90 via-navy-700/30 to-navy-700/40" />
+
+        {/* Content */}
+        <div className="relative mx-auto flex min-h-[320px] max-w-7xl flex-col items-center justify-center px-4 py-16 text-center sm:min-h-[420px] sm:py-20 lg:min-h-[520px]">
+          <h1 className="text-4xl font-bold tracking-tight text-white drop-shadow-lg sm:text-5xl lg:text-6xl">
             {heroHeading.split(" ").map((word, i) => {
-              const isGold = word.toLowerCase() === "freedom" || i === heroHeading.split(" ").length - 1;
+              const isGold =
+                word.toLowerCase() === "freedom" ||
+                i === heroHeading.split(" ").length - 1;
               return isGold ? (
-                <span key={i} className="text-gold-400">{word} </span>
+                <span key={i} className="text-gold-400">
+                  {word}{" "}
+                </span>
               ) : (
                 <span key={i}>{word} </span>
               );
             })}
           </h1>
-          <p className="mx-auto mt-4 max-w-2xl text-lg text-gray-300">
+          <p className="mx-auto mt-4 max-w-2xl text-lg text-gray-100 drop-shadow-md sm:text-xl">
             {heroSubheading}
           </p>
         </div>
+
         <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-[var(--color-bg)] to-transparent" />
       </section>
 
       {/* Vehicles */}
-      <section id="vehicles" className="mx-auto max-w-7xl px-4 py-12">
+      <section id="vehicles" className="mx-auto max-w-7xl px-4 py-16">
         <h2 className="mb-2 text-2xl font-bold text-navy-700">Our Fleet</h2>
         <p className="mb-8 text-gray-500">Browse and book from our available vehicles</p>
         <VehicleGrid vehicles={vehicles} />
-      </section>
-
-      {/* Fleet Gallery */}
-      <section className="mx-auto max-w-7xl px-4 py-12">
-        <h2 className="mb-2 text-2xl font-bold text-navy-700">Our Fleet Gallery</h2>
-        <p className="mb-8 text-gray-500">A closer look at our vehicles</p>
-        <FleetGallery vehicles={vehicles.slice(0, 8)} />
       </section>
 
       {/* How It Works */}
