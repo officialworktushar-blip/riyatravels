@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { Resend } from "resend";
+import nodemailer from "nodemailer";
 
 export async function POST(request: NextRequest) {
   try {
@@ -9,8 +9,6 @@ export async function POST(request: NextRequest) {
     if (!bookingId) {
       return NextResponse.json({ error: "Booking ID is required" }, { status: 400 });
     }
-
-    const resend = new Resend(process.env.RESEND_API_KEY);
 
     const supabase = createAdminClient();
 
@@ -61,15 +59,32 @@ export async function POST(request: NextRequest) {
       </div>
     `;
 
-    await resend.emails.send({
-      from: process.env.RESEND_FROM_EMAIL || "Riya Travels <no-reply@riyatravels.com>",
-      to: booking.customer_email,
-      subject: `Booking Confirmed — ${vehicle.name} (${startDate})`,
-      html,
-    });
+    try {
+      const transporter = nodemailer.createTransport({
+        host: "smtp.gmail.com",
+        port: 465,
+        secure: true,
+        auth: {
+          user: process.env.GMAIL_USER,
+          pass: process.env.GMAIL_APP_PASSWORD,
+        },
+      });
+
+      await transporter.sendMail({
+        from: `"Riya Travels" <${process.env.GMAIL_USER}>`,
+        to: booking.customer_email,
+        subject: `Booking Confirmed — ${vehicle.name} (${startDate})`,
+        html,
+      });
+    } catch {
+      return NextResponse.json({
+        success: true,
+        warning: "Booking approved, but the email failed to send. You may want to notify the customer manually.",
+      });
+    }
 
     return NextResponse.json({ success: true });
   } catch {
-    return NextResponse.json({ error: "Failed to send email" }, { status: 500 });
+    return NextResponse.json({ error: "Failed to process request" }, { status: 500 });
   }
 }

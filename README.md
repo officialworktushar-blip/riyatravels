@@ -14,7 +14,7 @@ A full-stack vehicle rental booking website for scooters, bikes, and cars. Built
 | Framework  | Next.js 14 (App Router) + TypeScript             |
 | Styling    | Tailwind CSS (brand: navy `#16233F` / gold `#C99A4A`) |
 | Backend    | Supabase (Postgres, Storage, Auth)               |
-| Email      | Resend                                           |
+| Email      | Nodemailer (Gmail SMTP)                          |
 
 ---
 
@@ -26,11 +26,11 @@ Copy `.env.example` to `.env.local` and fill in your values:
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
-RESEND_API_KEY=re_...
-RESEND_FROM_EMAIL=Riya Travels <no-reply@yourdomain.com>
+GMAIL_USER=your-email@gmail.com
+GMAIL_APP_PASSWORD=your-app-password   # Google Account → Security → 2-Step Verification → App Passwords
 ```
 
-> ⚠️ **Security**: `SUPABASE_SERVICE_ROLE_KEY` and `RESEND_API_KEY` are server-only. They are never exposed to the browser. Public code only ever reads the `occupied_slots` view — never the `bookings` table directly (its public select is disabled by RLS).
+> ⚠️ **Security**: `SUPABASE_SERVICE_ROLE_KEY`, `GMAIL_USER`, and `GMAIL_APP_PASSWORD` are server-only. They are never exposed to the browser. Public code only ever reads the `occupied_slots` view — never the `bookings` table directly (its public select is disabled by RLS).
 
 ---
 
@@ -72,7 +72,7 @@ src/
 │   └── api/
 │       ├── upload/               # Server upload helper
 │       ├── signed-url/           # Short-lived signed URLs for private docs
-│       └── send-confirmation/    # Resend confirmation email on approve
+│       └── send-confirmation/    # Gmail SMTP confirmation email on approve
 ├── components/
 │   ├── public/                   # Navbar, vehicle grid/card
 │   └── booking/                  # TimeSlot / Details / License / Payment / Review
@@ -145,7 +145,7 @@ All `/admin/*` routes (except `/admin/login`) are protected by `src/middleware.t
 
 ## Security Notes
 
-- Service-role key and Resend key are **server-side only**.
+- Service-role key and Gmail credentials are **server-side only**.
 - `licenses` and `payment-proofs` are **private** buckets; served only via short-lived signed URLs generated server-side for admin views.
 - Public code only reads the `occupied_slots` **view** for availability — never the `bookings` table (public select disabled by RLS).
 - All form inputs are validated client-side (and the insert is sanitized server-side by Supabase RLS).
