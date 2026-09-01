@@ -43,7 +43,7 @@ export default async function HomePage() {
   return (
     <div>
       {/* Hero */}
-      <section className="relative overflow-hidden bg-navy-700">
+      <section className="relative aspect-[4/3] w-full overflow-hidden bg-navy-700 sm:aspect-[16/9]">
         {heroImageUrl ? (
           <Image
             src={heroImageUrl}
@@ -57,28 +57,27 @@ export default async function HomePage() {
           <div className="absolute inset-0 bg-[url('/noise.svg')] opacity-5" />
         )}
 
-        {/* Readability overlays */}
-        <div className="absolute inset-0 bg-gradient-to-b from-navy-900/55 via-navy-900/10 to-navy-900/55" />
-
-        {/* Content */}
-        <div className="relative mx-auto flex min-h-[320px] max-w-7xl flex-col items-center justify-center px-4 py-16 text-center sm:min-h-[420px] sm:py-20 lg:min-h-[520px]">
-          <h1 className="text-4xl font-bold tracking-tight text-white drop-shadow-lg sm:text-5xl lg:text-6xl">
-            {heroHeading.split(" ").map((word, i) => {
-              const isGold =
-                word.toLowerCase() === "freedom" ||
-                i === heroHeading.split(" ").length - 1;
-              return isGold ? (
-                <span key={i} className="text-gold-400">
-                  {word}{" "}
-                </span>
-              ) : (
-                <span key={i}>{word} </span>
-              );
-            })}
-          </h1>
-          <p className="mx-auto mt-4 max-w-2xl text-lg text-gray-100 drop-shadow-md sm:text-xl">
-            {heroSubheading}
-          </p>
+        {/* Content with contrast card */}
+        <div className="relative flex h-full w-full items-center justify-center px-4 text-center">
+          <div className="max-w-3xl rounded-2xl bg-[#16233F]/60 px-6 py-6 shadow-lg backdrop-blur-sm sm:px-10 sm:py-8">
+            <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
+              {heroHeading.split(" ").map((word, i) => {
+                const isGold =
+                  word.toLowerCase() === "freedom" ||
+                  i === heroHeading.split(" ").length - 1;
+                return isGold ? (
+                  <span key={i} className="text-gold-400">
+                    {word}{" "}
+                  </span>
+                ) : (
+                  <span key={i}>{word} </span>
+                );
+              })}
+            </h1>
+            <p className="mx-auto mt-4 max-w-2xl text-lg text-gray-100 sm:text-xl">
+              {heroSubheading}
+            </p>
+          </div>
         </div>
       </section>
 
