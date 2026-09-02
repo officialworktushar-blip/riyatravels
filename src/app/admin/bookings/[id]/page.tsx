@@ -11,7 +11,7 @@ import {
   formatCurrency,
   getTypeIcon,
 } from "@/lib/utils";
-import { ArrowLeft, Check, X, Ban, Loader2 } from "lucide-react";
+import { ArrowLeft, Check, X, Ban, Loader2, MessageCircle } from "lucide-react";
 
 interface SignedImage {
   path: string;
@@ -145,6 +145,35 @@ export default function BookingDetailPage() {
 
   const vehicle = booking.vehicle;
 
+  const ADMIN_WHATSAPP = "918490048239";
+
+  const getAdminNotifyUrl = () => {
+    const msg = encodeURIComponent(
+      `🚗 *New Booking Received!*%0A%0A` +
+      `Customer: ${booking.customer_name}%0A` +
+      `Vehicle: ${vehicle?.name || "N/A"}%0A` +
+      `From: ${formatDateTime(booking.start_time)}%0A` +
+      `To: ${formatDateTime(booking.end_time)}%0A` +
+      `Amount: ₹${booking.amount}%0A` +
+      `WhatsApp: ${booking.customer_whatsapp}`
+    );
+    return `https://wa.me/${ADMIN_WHATSAPP}?text=${msg}`;
+  };
+
+  const getCustomerNotifyUrl = () => {
+    const phone = booking.customer_whatsapp.replace(/[^0-9]/g, "");
+    const msg = encodeURIComponent(
+      `✅ *Booking Approved!*%0A%0A` +
+      `Hi ${booking.customer_name},%0A` +
+      `Your booking for *${vehicle?.name || "N/A"}* has been approved!%0A%0A` +
+      `From: ${formatDateTime(booking.start_time)}%0A` +
+      `To: ${formatDateTime(booking.end_time)}%0A` +
+      `Amount: ₹${booking.amount}%0A%0A` +
+      `Thank you for choosing Riya Travels!`
+    );
+    return `https://wa.me/${phone}?text=${msg}`;
+  };
+
   return (
     <div className="max-w-4xl">
       <Link
@@ -167,6 +196,34 @@ export default function BookingDetailPage() {
       {emailStatus === "failed" && (
         <div className="mb-6 rounded-lg border border-yellow-200 bg-yellow-50 p-4 text-sm text-yellow-700">
           Booking approved but confirmation email could not be sent.
+        </div>
+      )}
+
+      {/* WhatsApp notification links */}
+      {booking.status === "pending_review" && (
+        <div className="mb-6 rounded-lg border border-green-200 bg-green-50 p-4">
+          <p className="mb-2 text-sm font-medium text-green-800">Notify admin on WhatsApp:</p>
+          <a
+            href={getAdminNotifyUrl()}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 transition-colors"
+          >
+            <MessageCircle size={16} /> Send to +91 84900 48239
+          </a>
+        </div>
+      )}
+      {booking.status === "approved" && (
+        <div className="mb-6 rounded-lg border border-green-200 bg-green-50 p-4">
+          <p className="mb-2 text-sm font-medium text-green-800">Notify customer on WhatsApp:</p>
+          <a
+            href={getCustomerNotifyUrl()}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 transition-colors"
+          >
+            <MessageCircle size={16} /> Send to {booking.customer_whatsapp}
+          </a>
         </div>
       )}
 
@@ -239,7 +296,7 @@ export default function BookingDetailPage() {
       <div className="card mb-6 p-5">
         <h3 className="mb-3 text-sm font-semibold text-navy-700">Customer</h3>
         <div className="space-y-1.5 text-sm text-gray-600">
-          <p><span className="font-medium text-navy-700">Email:</span> {booking.customer_email}</p>
+          <p><span className="font-medium text-navy-700">Email:</span> {booking.customer_email || "Not provided"}</p>
           <p><span className="font-medium text-navy-700">WhatsApp:</span> {booking.customer_whatsapp}</p>
         </div>
       </div>

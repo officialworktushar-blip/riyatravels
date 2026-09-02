@@ -70,12 +70,14 @@ export async function POST(request: NextRequest) {
         },
       });
 
-      await transporter.sendMail({
-        from: `"Riya Travels" <${process.env.GMAIL_USER}>`,
-        to: booking.customer_email,
-        subject: `Booking Confirmed — ${vehicle.name} (${startDate})`,
-        html,
-      });
+      if (booking.customer_email) {
+        await transporter.sendMail({
+          from: `"Riya Travels" <${process.env.GMAIL_USER}>`,
+          to: booking.customer_email,
+          subject: `Booking Confirmed — ${vehicle.name} (${startDate})`,
+          html,
+        });
+      }
     } catch {
       return NextResponse.json({
         success: true,

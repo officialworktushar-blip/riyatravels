@@ -146,7 +146,7 @@ export default function BookingPage() {
       // Insert booking
       const { error: insertErr } = await supabase.from("bookings").insert({
         customer_name: data.customerName,
-        customer_email: data.customerEmail,
+        customer_email: data.customerEmail || null,
         customer_whatsapp: data.customerWhatsApp,
         vehicle_id: vehicleId,
         start_time: data.startTime,

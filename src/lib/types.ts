@@ -20,7 +20,7 @@ export interface Vehicle {
 export interface Booking {
   id: string;
   customer_name: string;
-  customer_email: string;
+  customer_email: string | null;
   customer_whatsapp: string;
   vehicle_id: string;
   start_time: string;

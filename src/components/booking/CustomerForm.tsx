@@ -18,8 +18,7 @@ export default function CustomerForm({ data, updateData, onBack, onNext }: Props
   const validate = () => {
     const errs: Record<string, string> = {};
     if (!data.customerName.trim()) errs.customerName = "Name is required";
-    if (!data.customerEmail.trim()) errs.customerEmail = "Email is required";
-    else if (!isValidEmail(data.customerEmail)) errs.customerEmail = "Invalid email address";
+    if (data.customerEmail.trim() && !isValidEmail(data.customerEmail)) errs.customerEmail = "Invalid email address";
     if (!data.customerWhatsApp.trim()) errs.customerWhatsApp = "WhatsApp number is required";
     else if (!isValidPhone(data.customerWhatsApp)) errs.customerWhatsApp = "Invalid phone number";
     setErrors(errs);
@@ -60,7 +59,7 @@ export default function CustomerForm({ data, updateData, onBack, onNext }: Props
         </div>
 
         <div>
-          <label className="label-text">Email Address *</label>
+          <label className="label-text">Email Address (optional)</label>
           <input
             type="email"
             className={`input-field ${errors.customerEmail ? "border-red-400" : ""}`}

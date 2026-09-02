@@ -92,7 +92,11 @@ export default function VehiclesPage() {
   const handleDelete = async (v: Vehicle) => {
     if (!confirm(`Delete vehicle "${v.name}"?`)) return;
     const { error } = await supabase.from("vehicles").delete().eq("id", v.id);
-    if (!error) loadVehicles();
+    if (error) {
+      setError(`Failed to delete vehicle: ${error.message}`);
+    } else {
+      loadVehicles();
+    }
   };
 
   const handleSave = async (e: React.FormEvent) => {
@@ -209,6 +213,12 @@ export default function VehiclesPage() {
           </button>
         ))}
       </div>
+
+      {error && !showForm && (
+        <div className="mb-6 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-600">
+          {error}
+        </div>
+      )}
 
       {loading ? (
         <div className="flex justify-center py-16">
