@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import {
   Phone,
@@ -30,27 +29,15 @@ const WA_NUMBER = "91XXXXXXXXXX";
 export default function ContactPage() {
   return (
     <div>
-      {/* Hero banner */}
-      <section className="relative aspect-[4/3] w-full overflow-hidden bg-navy-700 sm:aspect-[16/9]">
-        <Image
-          src="/contact-hero.webp"
-          alt="Contact Riya Travels"
-          fill
-          className="object-cover object-center"
-          sizes="100vw"
-          priority
-        />
-        <div className="relative flex h-full w-full items-center justify-center px-4 text-center">
-          <div className="max-w-3xl rounded-2xl bg-[#16233F]/60 px-6 py-6 shadow-lg backdrop-blur-sm sm:px-10 sm:py-8">
-            <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl">
-              Get in <span className="text-gold-400">Touch</span>
-            </h1>
-            <p className="mx-auto mt-4 max-w-2xl text-lg text-gray-100 sm:text-xl">
-              Questions about a booking, a vehicle, or your ride? We're one message
-              away — reach us on WhatsApp or email.
-            </p>
-          </div>
-        </div>
+      {/* Header */}
+      <section className="mx-auto max-w-7xl px-4 pt-16 pb-4">
+        <h1 className="text-3xl font-bold text-navy-700 sm:text-4xl">
+          Get in <span className="text-gold-400">Touch</span>
+        </h1>
+        <p className="mt-3 max-w-2xl text-gray-500">
+          Questions about a booking, a vehicle, or your ride? We're one message
+          away — reach us on WhatsApp or email.
+        </p>
       </section>
 
       {/* Contact details */}

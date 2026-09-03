@@ -66,27 +66,15 @@ export const metadata = {
 export default function AboutPage() {
   return (
     <div>
-      {/* Hero banner */}
-      <section className="relative aspect-[4/3] w-full overflow-hidden bg-navy-700 sm:aspect-[16/9]">
-        <Image
-          src="/about-hero.webp"
-          alt="Riya Travels fleet"
-          fill
-          className="object-cover object-center"
-          sizes="100vw"
-          priority
-        />
-        <div className="relative flex h-full w-full items-center justify-center px-4 text-center">
-          <div className="max-w-3xl rounded-2xl bg-[#16233F]/60 px-6 py-6 shadow-lg backdrop-blur-sm sm:px-10 sm:py-8">
-            <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl">
-              About <span className="text-gold-400">Riya Travels</span>
-            </h1>
-            <p className="mx-auto mt-4 max-w-2xl text-lg text-gray-100 sm:text-xl">
-              Your friendly neighbourhood ride rental — affordable wheels, simple
-              UPI payments, and zero paperwork hassle.
-            </p>
-          </div>
-        </div>
+      {/* Header */}
+      <section className="mx-auto max-w-4xl px-4 pt-16 pb-4">
+        <h1 className="text-3xl font-bold text-navy-700 sm:text-4xl">
+          About <span className="text-gold-400">Riya Travels</span>
+        </h1>
+        <p className="mt-3 max-w-2xl text-gray-500">
+          Your friendly neighbourhood ride rental — affordable wheels, simple
+          UPI payments, and zero paperwork hassle.
+        </p>
       </section>
 
       {/* Our Story */}
