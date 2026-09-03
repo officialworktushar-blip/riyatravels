@@ -33,12 +33,17 @@ export default function ReviewStep({
         {/* Vehicle */}
         <div className="rounded-lg bg-gray-50 p-4">
           <p className="text-xs font-medium uppercase text-gray-400">Vehicle</p>
-          <div className="mt-1 flex items-center gap-2">
+          <div className="mt-1 flex flex-wrap items-center gap-2">
             <span className="text-xl">{getTypeIcon(vehicle.type)}</span>
             <span className="font-semibold text-navy-700">{vehicle.name}</span>
             <span className={getTypeBadgeClass(vehicle.type)}>
               {vehicle.type.charAt(0).toUpperCase() + vehicle.type.slice(1)}
             </span>
+            {vehicle.vehicle_number && (
+              <span className="rounded-full bg-gray-200 px-2.5 py-0.5 text-xs font-medium text-navy-600">
+                {vehicle.vehicle_number}
+              </span>
+            )}
           </div>
         </div>
 

@@ -270,6 +270,9 @@ export default function VehiclesPage() {
                   <p className="font-medium text-navy-700">{formatCurrency(v.rate_per_day)}</p>
                 </div>
               </div>
+              {v.vehicle_number && (
+                <p className="mt-1 text-xs text-gray-400">{v.vehicle_number}</p>
+              )}
               {v.seats_or_capacity && (
                 <p className="mt-1 text-xs text-gray-400">{v.seats_or_capacity}</p>
               )}

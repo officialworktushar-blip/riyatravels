@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Vehicle } from "@/lib/types";
 import { formatCurrency, getTypeBadgeClass, getTypeIcon } from "@/lib/utils";
-import { Clock, Calendar, Users } from "lucide-react";
+import { Clock, Calendar, Users, Hash } from "lucide-react";
 
 export default function VehicleCard({ vehicle }: { vehicle: Vehicle }) {
   return (
@@ -38,6 +38,12 @@ export default function VehicleCard({ vehicle }: { vehicle: Vehicle }) {
             <Calendar size={14} className="text-gold-400" />
             <span>{formatCurrency(vehicle.rate_per_day)} / day</span>
           </div>
+          {vehicle.vehicle_number && (
+            <div className="flex items-center gap-2">
+              <Hash size={14} className="text-gold-400" />
+              <span>{vehicle.vehicle_number}</span>
+            </div>
+          )}
           {vehicle.seats_or_capacity && (
             <div className="flex items-center gap-2">
               <Users size={14} className="text-gold-400" />

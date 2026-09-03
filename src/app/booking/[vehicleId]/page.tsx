@@ -232,9 +232,16 @@ export default function BookingPage() {
         </div>
         <div>
           <h1 className="text-lg font-bold text-navy-700">{vehicle.name}</h1>
-          <span className={getTypeBadgeClass(vehicle.type)}>
-            {vehicle.type.charAt(0).toUpperCase() + vehicle.type.slice(1)}
-          </span>
+          <div className="flex flex-wrap items-center gap-2">
+            <span className={getTypeBadgeClass(vehicle.type)}>
+              {vehicle.type.charAt(0).toUpperCase() + vehicle.type.slice(1)}
+            </span>
+            {vehicle.vehicle_number && (
+              <span className="rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-navy-600">
+                {vehicle.vehicle_number}
+              </span>
+            )}
+          </div>
         </div>
       </div>
 
