@@ -105,7 +105,7 @@ export default function AboutPage() {
 
         <div className="mt-10 overflow-hidden rounded-2xl">
           <Image
-            src="/about-fleet.webp"
+            src="/about-bg.webp"
             alt="A mix of scooters, bikes and cars from the Riya Travels fleet"
             width={1200}
             height={675}
