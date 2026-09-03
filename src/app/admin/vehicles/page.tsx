@@ -21,6 +21,7 @@ const TYPE_FILTERS: { label: string; value: VehicleType | "all" }[] = [
 const EMPTY_FORM = {
   type: "scooty" as VehicleType,
   name: "",
+  vehicle_number: "",
   rate_per_hour: "",
   rate_per_day: "",
   seats_or_capacity: "",
@@ -71,6 +72,7 @@ export default function VehiclesPage() {
     setForm({
       type: v.type,
       name: v.name,
+      vehicle_number: v.vehicle_number || "",
       rate_per_hour: String(v.rate_per_hour),
       rate_per_day: String(v.rate_per_day),
       seats_or_capacity: v.seats_or_capacity || "",
@@ -146,6 +148,7 @@ export default function VehiclesPage() {
     const payload = {
       type: form.type,
       name: form.name.trim(),
+      vehicle_number: form.vehicle_number.trim() || null,
       rate_per_hour: ratePerHour,
       rate_per_day: ratePerDay,
       seats_or_capacity: form.seats_or_capacity.trim() || null,
@@ -397,6 +400,17 @@ export default function VehiclesPage() {
                     onChange={(e) => setForm({ ...form, rate_per_day: e.target.value })}
                   />
                 </div>
+              </div>
+
+              <div>
+                <label className="label-text">Vehicle Number (optional)</label>
+                <input
+                  type="text"
+                  className="input-field"
+                  placeholder="e.g. MH 12 AB 1234"
+                  value={form.vehicle_number}
+                  onChange={(e) => setForm({ ...form, vehicle_number: e.target.value })}
+                />
               </div>
 
               <div>

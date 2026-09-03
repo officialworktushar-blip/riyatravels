@@ -12,6 +12,7 @@ export interface Vehicle {
   image_url: string;
   rate_per_hour: number;
   rate_per_day: number;
+  vehicle_number: string | null;
   seats_or_capacity: string | null;
   is_active: boolean;
   created_at: string;
