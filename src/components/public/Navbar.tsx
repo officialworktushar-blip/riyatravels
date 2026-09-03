@@ -29,9 +29,9 @@ export default function Navbar() {
           <Link href="/" className="text-sm font-medium text-gray-100 transition-colors hover:text-gold-400">
             Home
           </Link>
-          <a href="#vehicles" className="text-sm font-medium text-gray-100 transition-colors hover:text-gold-400">
+          <Link href="/#vehicles" className="text-sm font-medium text-gray-100 transition-colors hover:text-gold-400">
             Vehicles
-          </a>
+          </Link>
           <Link href="/about" className="text-sm font-medium text-gray-100 transition-colors hover:text-gold-400">
             About
           </Link>
@@ -60,13 +60,13 @@ export default function Navbar() {
           >
             Home
           </Link>
-          <a
-            href="#vehicles"
+          <Link
+            href="/#vehicles"
             className="block py-2 text-sm font-medium text-gray-100"
             onClick={() => setMobileOpen(false)}
           >
             Vehicles
-          </a>
+          </Link>
           <Link
             href="/about"
             className="block py-2 text-sm font-medium text-gray-100"
