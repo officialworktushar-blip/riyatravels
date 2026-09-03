@@ -160,6 +160,16 @@ export default function BookingDetailPage() {
     return `https://wa.me/${ADMIN_WHATSAPP}?text=${msg}`;
   };
 
+  const getCustomerContactUrl = () => {
+    const phone = booking.customer_whatsapp.replace(/[^0-9]/g, "");
+    const msg = encodeURIComponent(
+      `Hi ${booking.customer_name},%0A%0A` +
+      `This is from Riya Travels. We have received your booking for *${vehicle?.name || "N/A"}* and are reviewing it.%0A%0A` +
+      `We will get back to you shortly.`
+    );
+    return `https://wa.me/${phone}?text=${msg}`;
+  };
+
   const getCustomerNotifyUrl = () => {
     const phone = booking.customer_whatsapp.replace(/[^0-9]/g, "");
     const msg = encodeURIComponent(
@@ -201,16 +211,19 @@ export default function BookingDetailPage() {
 
       {/* WhatsApp notification links */}
       {booking.status === "pending_review" && (
-        <div className="mb-6 rounded-lg border border-green-200 bg-green-50 p-4">
-          <p className="mb-2 text-sm font-medium text-green-800">Notify admin on WhatsApp:</p>
-          <a
-            href={getAdminNotifyUrl()}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 transition-colors"
-          >
-            <MessageCircle size={16} /> Send to +91 84900 48239
-          </a>
+        <div className="mb-6 rounded-lg border border-blue-200 bg-blue-50 p-4">
+          <p className="mb-2 text-sm font-medium text-blue-800">Contact customer on WhatsApp:</p>
+          <div className="flex flex-wrap items-center gap-3">
+            <a
+              href={getCustomerContactUrl()}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 transition-colors"
+            >
+              <MessageCircle size={16} /> Contact {booking.customer_whatsapp}
+            </a>
+            <span className="text-xs text-blue-600">Customer&apos;s WhatsApp number from booking details</span>
+          </div>
         </div>
       )}
       {booking.status === "approved" && (
