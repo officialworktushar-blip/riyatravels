@@ -103,13 +103,12 @@ export default function AboutPage() {
           </p>
         </div>
 
-        <div className="mt-10 overflow-hidden rounded-2xl">
+        <div className="relative mt-10 aspect-[4/3] w-full overflow-hidden rounded-2xl sm:aspect-[16/9]">
           <Image
             src="/about-bg.webp"
             alt="A mix of scooters, bikes and cars from the Riya Travels fleet"
-            width={1200}
-            height={675}
-            className="h-auto w-full object-cover"
+            fill
+            className="object-cover object-center"
             sizes="(max-width: 768px) 100vw, 1024px"
           />
         </div>
