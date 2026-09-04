@@ -37,14 +37,14 @@ export default async function HomePage() {
   return (
     <div>
       {/* Hero */}
-      <section className="scroll-mt-[65px] relative w-full overflow-hidden bg-navy-700">
+      <section className="relative w-full overflow-hidden bg-navy-700">
         <div className="relative aspect-[4/3] w-full sm:aspect-[16/9]">
           {heroImageUrl ? (
             <Image
               src={heroImageUrl}
               alt="Riya Travels"
               fill
-              className="object-cover object-center"
+              className="object-contain sm:object-cover sm:object-center"
               sizes="100vw"
               priority
             />
