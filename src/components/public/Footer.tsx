@@ -1,4 +1,4 @@
-import { Facebook, Instagram, Twitter, Phone, Mail } from "lucide-react";
+import { Facebook, Instagram, Twitter, Phone, Mail, MapPin } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -83,6 +83,17 @@ export default function Footer() {
                   className="transition-colors hover:text-gold-400"
                 >
                   scooty.riyatravels@gmail.com
+                </a>
+              </li>
+              <li className="flex items-center gap-2">
+                <MapPin size={16} className="text-gold-400" />
+                <a
+                  href="https://www.google.com/maps?q=21,+Nr.+Pratapnagar+Bridge,+Lalbaug+Road,+Pratapnagar,+Vadodara,+Gujarat,+India"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="transition-colors hover:text-gold-400"
+                >
+                  21, Nr. Pratapnagar Bridge, Vadodara
                 </a>
               </li>
               <li className="pt-2">

@@ -81,27 +81,34 @@ export default function ContactPage() {
               <MapPin size={26} />
             </div>
             <h2 className="text-lg font-semibold text-navy-700">Location</h2>
-            <p className="mt-2 text-sm leading-relaxed text-gray-500">
-              Your town, your street —<br />
-              <span className="text-gray-400">(exact address coming soon)</span>
-            </p>
+            <address className="mt-2 text-sm leading-relaxed not-italic text-gray-500">
+              21, Nr. Pratapnagar Bridge,<br />
+              Lalbaug Road, Pratapnagar,<br />
+              Vadodara, Gujarat, India
+            </address>
+            <a
+              href="https://www.google.com/maps?q=22.2820,73.2066"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-outline mt-5 w-full"
+            >
+              <MapPin size={16} className="mr-1" /> Get Directions
+            </a>
           </div>
         </div>
       </section>
 
-      {/* Map placeholder */}
+      {/* Map */}
       <section className="mx-auto max-w-7xl px-4 pb-16">
         <div className="overflow-hidden rounded-2xl border border-gray-100 shadow-sm">
-          <div className="flex h-72 items-center justify-center bg-[#E8EBF0] sm:h-96">
-            <div className="px-6 text-center">
-              <MapPin size={40} className="mx-auto text-gold-500" />
-              <p className="mt-4 font-semibold text-navy-700">Our Location</p>
-              <p className="mt-1 text-sm text-gray-500">
-                Interactive map coming soon — you'll find us right in town, easy to
-                reach and easy to park.
-              </p>
-            </div>
-          </div>
+          <iframe
+            title="Riya Travels location map"
+            src="https://www.google.com/maps?q=21,+Nr.+Pratapnagar+Bridge,+Lalbaug+Road,+Pratapnagar,+Vadodara,+Gujarat,+India&z=16&output=embed"
+            className="h-72 w-full sm:h-96"
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            allowFullScreen
+          />
         </div>
       </section>
 

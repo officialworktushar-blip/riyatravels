@@ -37,7 +37,7 @@ export default async function HomePage() {
   return (
     <div>
       {/* Hero */}
-      <section className="relative aspect-[4/3] w-full overflow-hidden bg-navy-700 sm:aspect-[16/9]">
+      <section className="scroll-mt-16 relative aspect-[4/3] w-full overflow-hidden bg-navy-700 sm:aspect-[16/9]">
         {heroImageUrl ? (
           <Image
             src={heroImageUrl}
