@@ -7,6 +7,7 @@ import {
   formatCurrency,
   generateTimeOptions,
   calculateAmount,
+  getPricingSummary,
   addHours,
   toISOString,
 } from "@/lib/utils";
@@ -36,6 +37,10 @@ export default function TimeSlotPicker({
 
   const timeOptions = generateTimeOptions();
 
+  const durationOptions = DURATION_OPTIONS.filter(
+    (opt) => opt.hours >= vehicle.min_hours
+  );
+
   const occupiedForDate = useMemo(() => {
     return occupiedSlots.filter((slot) => {
       const slotStart = new Date(slot.start_time);
@@ -60,7 +65,7 @@ export default function TimeSlotPicker({
     setDurationHours(hours);
     const start = new Date(`${date}T${startTime}:00`);
     const end = addHours(start, hours);
-    const amount = calculateAmount(vehicle.rate_per_hour, vehicle.rate_per_day, start.toISOString(), end.toISOString());
+    const amount = calculateAmount(vehicle, start.toISOString(), end.toISOString());
     updateData({
       startTime: toISOString(start),
       endTime: toISOString(end),
@@ -118,7 +123,7 @@ export default function TimeSlotPicker({
       <div className="mb-6">
         <label className="label-text">Duration</label>
         <div className="grid grid-cols-3 gap-2 sm:grid-cols-5">
-          {DURATION_OPTIONS.map((opt) => (
+          {durationOptions.map((opt) => (
             <button
               key={opt.hours}
               onClick={() => handleDurationSelect(opt.hours)}
@@ -150,9 +155,9 @@ export default function TimeSlotPicker({
       {canProceed && (
         <div className="mb-6 rounded-lg border border-gold-200 bg-gold-50 p-4">
           <p className="text-sm text-gray-600">
-            {durationHours !== null && durationHours >= 24
-              ? `${Math.ceil(durationHours / 24)} day(s) × ${formatCurrency(vehicle.rate_per_day)}`
-              : `${durationHours}h × ${formatCurrency(vehicle.rate_per_hour)}/hr`}
+            {durationHours !== null
+              ? getPricingSummary(vehicle, durationHours)
+              : ""}
           </p>
           <p className="mt-1 text-xl font-bold text-navy-700">
             Total: {formatCurrency(data.amount)}

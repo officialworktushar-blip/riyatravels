@@ -13,11 +13,13 @@ import {
   LogOut,
   Menu,
   X,
+  IndianRupee,
 } from "lucide-react";
 
 const NAV_ITEMS = [
   { href: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/admin/vehicles", label: "Vehicles", icon: Car },
+  { href: "/admin/pricing", label: "Pricing", icon: IndianRupee },
   { href: "/admin/availability", label: "Availability", icon: CalendarDays },
   { href: "/admin/settings", label: "Settings", icon: Settings },
   { href: "/admin/testimonials", label: "Testimonials", icon: Star },

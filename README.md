@@ -160,6 +160,7 @@ Postgres raises error code **`23P01`** (exclusion constraint violation) when an 
 - `/admin/dashboard` — bookings list. Filter by status **and** vehicle type.
 - `/admin/bookings/[id]` — full customer + vehicle info, time slot, amount, documents via signed URLs. Approve / Reject / Cancel.
 - `/admin/vehicles` — CRUD for scooters, bikes, and cars (image upload auto-converted to WebP).
+- `/admin/pricing` — set minimum-order terms per vehicle (min hours, prepaid min amount, extra rate/hr after min, full-day rate).
 - `/admin/availability` — timeline of bookings + blocked slots with `23P01` overlap handling.
 - `/admin/settings` — edit UPI ID, QR scanner image, and homepage hero (heading, subheading, background image).
 - `/admin/testimonials` — add/edit/delete/toggle customer testimonials (name, star rating, comment).
@@ -174,7 +175,7 @@ All `/admin/*` routes (except `/admin/login`) are protected by `src/middleware.t
 
 | Table | Key columns | Notes |
 |-------|-------------|-------|
-| `vehicles` | id, type, name, image_url, rate_per_hour, rate_per_day, is_active | Public read via RLS |
+| `vehicles` | id, type, name, image_url, rate_per_hour, rate_per_day, min_hours, min_amount, extra_rate_per_hour, is_active | Public read via RLS |
 | `bookings` | id, customer_*, vehicle_id, start/end_time, amount, status, admin_note | Public insert only; admin manages status |
 | `blocked_slots` | id, vehicle_id, start/end_time, reason | Admin only |
 | `app_settings` | id=1 (single row), upi_id, scanner_image_url, hero_image_url | Admin-managed |

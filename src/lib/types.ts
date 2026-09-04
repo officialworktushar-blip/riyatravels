@@ -12,6 +12,9 @@ export interface Vehicle {
   image_url: string;
   rate_per_hour: number;
   rate_per_day: number;
+  min_hours: number;
+  min_amount: number;
+  extra_rate_per_hour: number | null;
   vehicle_number: string | null;
   seats_or_capacity: string | null;
   is_active: boolean;

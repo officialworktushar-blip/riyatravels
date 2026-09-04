@@ -1,10 +1,16 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Vehicle } from "@/lib/types";
-import { formatCurrency, getTypeBadgeClass, getTypeIcon } from "@/lib/utils";
+import {
+  getTypeBadgeClass,
+  getTypeIcon,
+  getVehiclePricingDisplay,
+} from "@/lib/utils";
 import { Clock, Calendar, Users, Hash } from "lucide-react";
 
 export default function VehicleCard({ vehicle }: { vehicle: Vehicle }) {
+  const pricing = getVehiclePricingDisplay(vehicle);
+
   return (
     <div className="card group">
       <div className="relative aspect-[16/10] bg-gray-100 overflow-hidden">
@@ -32,11 +38,11 @@ export default function VehicleCard({ vehicle }: { vehicle: Vehicle }) {
         <div className="mt-3 space-y-1.5 text-sm text-gray-500">
           <div className="flex items-center gap-2">
             <Clock size={14} className="text-gold-400 shrink-0" />
-            <span>{formatCurrency(vehicle.rate_per_hour)} / hour</span>
+            <span>{pricing.primary}</span>
           </div>
           <div className="flex items-center gap-2">
             <Calendar size={14} className="text-gold-400 shrink-0" />
-            <span>{formatCurrency(vehicle.rate_per_day)} / day</span>
+            <span>{pricing.secondary}</span>
           </div>
           {vehicle.vehicle_number && (
             <div className="flex items-center gap-2">

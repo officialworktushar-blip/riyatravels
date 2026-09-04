@@ -1,4 +1,4 @@
-import { VehicleType } from "./types";
+import { Vehicle, VehicleType } from "./types";
 
 export function formatCurrency(amount: number): string {
   return new Intl.NumberFormat("en-IN", {
@@ -58,8 +58,7 @@ export function getTypeIcon(type: VehicleType): string {
 }
 
 export function calculateAmount(
-  ratePerHour: number,
-  ratePerDay: number,
+  vehicle: Vehicle,
   startTime: string,
   endTime: string
 ): number {
@@ -68,12 +67,91 @@ export function calculateAmount(
   const diffMs = end.getTime() - start.getTime();
   const diffHours = diffMs / (1000 * 60 * 60);
 
-  if (diffHours >= 24) {
-    const days = Math.ceil(diffHours / 24);
-    return days * ratePerDay;
+  // Minimum-order packages (e.g. scooty): min amount prepaid + per-hour extra after the minimum
+  if (
+    vehicle.min_hours > 0 &&
+    vehicle.min_amount > 0 &&
+    vehicle.extra_rate_per_hour &&
+    vehicle.extra_rate_per_hour > 0
+  ) {
+    if (diffHours <= vehicle.min_hours) return vehicle.min_amount;
+    return (
+      vehicle.min_amount +
+      Math.ceil(diffHours - vehicle.min_hours) * vehicle.extra_rate_per_hour
+    );
   }
 
-  return Math.ceil(diffHours) * ratePerHour;
+  // Minimum-order packages without an extra per-hour rate (e.g. car: 12 hrs = Rs.1500, full day = day rate)
+  if (vehicle.min_hours > 0 && vehicle.min_amount > 0) {
+    if (diffHours >= 24) return Math.ceil(diffHours / 24) * vehicle.rate_per_day;
+    if (diffHours <= vehicle.min_hours) return vehicle.min_amount;
+    return Math.ceil(diffHours) * vehicle.rate_per_hour;
+  }
+
+  // Standard hourly / full-day pricing
+  if (diffHours >= 24) {
+    return Math.ceil(diffHours / 24) * vehicle.rate_per_day;
+  }
+
+  return Math.ceil(diffHours) * vehicle.rate_per_hour;
+}
+
+export function getPricingSummary(vehicle: Vehicle, hours: number): string {
+  const hasMinPackage = vehicle.min_hours > 0 && vehicle.min_amount > 0;
+  const extraRate = vehicle.extra_rate_per_hour;
+  const hasExtraRate = extraRate !== null && extraRate > 0;
+
+  if (hasMinPackage && hasExtraRate) {
+    if (hours <= vehicle.min_hours) {
+      return `${vehicle.min_hours} hrs min · ${formatCurrency(vehicle.min_amount)} prepaid`;
+    }
+    return `${vehicle.min_hours} hrs min (${formatCurrency(vehicle.min_amount)}) + ${hours - vehicle.min_hours}h × ${formatCurrency(extraRate)}/hr`;
+  }
+
+  if (hasMinPackage) {
+    if (hours <= vehicle.min_hours) {
+      return `${vehicle.min_hours} hrs min · ${formatCurrency(vehicle.min_amount)}`;
+    }
+    return `${Math.ceil(hours / 24)} day(s) × ${formatCurrency(vehicle.rate_per_day)}`;
+  }
+
+  if (hours >= 24) {
+    return `${Math.ceil(hours / 24)} day(s) × ${formatCurrency(vehicle.rate_per_day)}`;
+  }
+
+  return `${hours}h × ${formatCurrency(vehicle.rate_per_hour)}/hr`;
+}
+
+export interface VehiclePricingDisplay {
+  primary: string;
+  secondary: string;
+}
+
+export function getVehiclePricingDisplay(
+  vehicle: Vehicle
+): VehiclePricingDisplay {
+  const hasMinPackage = vehicle.min_hours > 0 && vehicle.min_amount > 0;
+  const extraRate = vehicle.extra_rate_per_hour;
+  const hasExtraRate = extraRate !== null && extraRate > 0;
+
+  if (hasMinPackage && hasExtraRate) {
+    return {
+      primary: `Min ${vehicle.min_hours} hrs · ${formatCurrency(vehicle.min_amount)} prepaid`,
+      secondary: `${formatCurrency(extraRate)} / hr after ${vehicle.min_hours} hrs · extra hours charged by admin`,
+    };
+  }
+
+  if (hasMinPackage) {
+    return {
+      primary: `Min ${vehicle.min_hours} hrs · ${formatCurrency(vehicle.min_amount)}`,
+      secondary: `${formatCurrency(vehicle.rate_per_day)} / full day`,
+    };
+  }
+
+  return {
+    primary: `${formatCurrency(vehicle.rate_per_hour)} / hour`,
+    secondary: `${formatCurrency(vehicle.rate_per_day)} / day`,
+  };
 }
 
 export function addHours(date: Date, hours: number): Date {

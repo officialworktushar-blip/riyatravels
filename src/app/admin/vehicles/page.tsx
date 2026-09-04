@@ -24,6 +24,9 @@ const EMPTY_FORM = {
   vehicle_number: "",
   rate_per_hour: "",
   rate_per_day: "",
+  min_hours: "2",
+  min_amount: "",
+  extra_rate_per_hour: "",
   seats_or_capacity: "",
   is_active: true,
 };
@@ -75,6 +78,12 @@ export default function VehiclesPage() {
       vehicle_number: v.vehicle_number || "",
       rate_per_hour: String(v.rate_per_hour),
       rate_per_day: String(v.rate_per_day),
+      min_hours: String(v.min_hours ?? 2),
+      min_amount: v.min_amount > 0 ? String(v.min_amount) : "",
+      extra_rate_per_hour:
+        v.extra_rate_per_hour && v.extra_rate_per_hour > 0
+          ? String(v.extra_rate_per_hour)
+          : "",
       seats_or_capacity: v.seats_or_capacity || "",
       is_active: v.is_active,
     });
@@ -108,6 +117,13 @@ export default function VehiclesPage() {
 
     const ratePerHour = parseFloat(form.rate_per_hour);
     const ratePerDay = parseFloat(form.rate_per_day);
+    const minHours = parseInt(form.min_hours, 10);
+    const minAmount =
+      form.min_amount.trim() === "" ? 0 : parseFloat(form.min_amount);
+    const extraRate =
+      form.extra_rate_per_hour.trim() === ""
+        ? null
+        : parseFloat(form.extra_rate_per_hour);
 
     if (isNaN(ratePerHour) || ratePerHour <= 0) {
       setError("Rate per hour must be a positive number.");
@@ -116,6 +132,21 @@ export default function VehiclesPage() {
     }
     if (isNaN(ratePerDay) || ratePerDay <= 0) {
       setError("Rate per day must be a positive number.");
+      setSaving(false);
+      return;
+    }
+    if (isNaN(minHours) || minHours < 1) {
+      setError("Minimum hours must be 1 or more.");
+      setSaving(false);
+      return;
+    }
+    if (isNaN(minAmount) || minAmount < 0) {
+      setError("Minimum amount must be 0 or more.");
+      setSaving(false);
+      return;
+    }
+    if (extraRate !== null && (isNaN(extraRate) || extraRate <= 0)) {
+      setError("Extra rate per hour must be a positive number.");
       setSaving(false);
       return;
     }
@@ -151,6 +182,9 @@ export default function VehiclesPage() {
       vehicle_number: form.vehicle_number.trim() || null,
       rate_per_hour: ratePerHour,
       rate_per_day: ratePerDay,
+      min_hours: minHours,
+      min_amount: minAmount,
+      extra_rate_per_hour: extraRate,
       seats_or_capacity: form.seats_or_capacity.trim() || null,
       is_active: form.is_active,
       image_url: imageUrl,
@@ -270,6 +304,14 @@ export default function VehiclesPage() {
                   <p className="font-medium text-navy-700">{formatCurrency(v.rate_per_day)}</p>
                 </div>
               </div>
+              {v.min_hours > 0 && v.min_amount > 0 && (
+                <p className="mt-1.5 text-xs font-medium text-gold-500">
+                  Min {v.min_hours} hrs · {formatCurrency(v.min_amount)} prepaid
+                  {v.extra_rate_per_hour && v.extra_rate_per_hour > 0
+                    ? ` · ${formatCurrency(v.extra_rate_per_hour)}/hr after`
+                    : ""}
+                </p>
+              )}
               {v.vehicle_number && (
                 <p className="mt-1 text-xs text-gray-400">{v.vehicle_number}</p>
               )}
@@ -403,6 +445,53 @@ export default function VehiclesPage() {
                     onChange={(e) => setForm({ ...form, rate_per_day: e.target.value })}
                   />
                 </div>
+              </div>
+
+              <div className="rounded-lg bg-gold-50 border border-gold-200 p-4">
+                <p className="mb-3 text-sm font-semibold text-navy-700">Minimum Order Pricing</p>
+                <div className="grid gap-4 grid-cols-1 sm:grid-cols-3">
+                  <div>
+                    <label className="label-text">Min Hours *</label>
+                    <input
+                      type="number"
+                      step="1"
+                      min="1"
+                      className="input-field"
+                      placeholder="2"
+                      value={form.min_hours}
+                      onChange={(e) => setForm({ ...form, min_hours: e.target.value })}
+                    />
+                  </div>
+                  <div>
+                    <label className="label-text">Min Amount / Prepaid (Rs.)</label>
+                    <input
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      className="input-field"
+                      placeholder="e.g. 200"
+                      value={form.min_amount}
+                      onChange={(e) => setForm({ ...form, min_amount: e.target.value })}
+                    />
+                  </div>
+                  <div>
+                    <label className="label-text">Extra Rate / Hr After Min (Rs.)</label>
+                    <input
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      className="input-field"
+                      placeholder="e.g. 60 (optional)"
+                      value={form.extra_rate_per_hour}
+                      onChange={(e) => setForm({ ...form, extra_rate_per_hour: e.target.value })}
+                    />
+                  </div>
+                </div>
+                <p className="mt-3 text-xs text-gray-500">
+                  Leave Min Amount as 0 to keep standard hourly/day pricing. When set, this amount is
+                  prepaid for the minimum hours and extra hours are charged at the extra rate (collected
+                  manually by admin after the trip).
+                </p>
               </div>
 
               <div>
