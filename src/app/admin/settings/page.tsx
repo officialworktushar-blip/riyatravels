@@ -147,20 +147,20 @@ export default function SettingsPage() {
         </div>
       )}
 
-      <form onSubmit={handleSave} className="space-y-8">
-        {/* ── Homepage Hero ── */}
-        <div className="card p-6">
+      <form onSubmit={handleSave} className="space-y-6 sm:space-y-8">
+        {/* Homepage Hero */}
+        <div className="card p-4 sm:p-6">
           <h3 className="mb-4 text-lg font-semibold text-navy-700">Homepage Hero</h3>
           <div className="space-y-4">
             <div>
               <label className="label-text">Hero Image</label>
               {heroPreview ? (
-                <div className="relative inline-block">
+                <div className="relative inline-block w-full">
                   <div className="overflow-hidden rounded-lg border border-gray-200">
                     <img
                       src={heroPreview}
                       alt="Hero"
-                      className="h-48 w-full object-cover"
+                      className="h-40 sm:h-48 w-full object-cover"
                     />
                   </div>
                   <button
@@ -169,19 +169,19 @@ export default function SettingsPage() {
                       setHeroPreview(null);
                       setHeroFile(null);
                     }}
-                    className="absolute right-2 top-2 rounded-full bg-red-500 p-1 text-white hover:bg-red-600"
+                    className="absolute right-2 top-2 rounded-full bg-red-500 p-2 text-white hover:bg-red-600 min-h-[36px] min-w-[36px] flex items-center justify-center"
                   >
-                    <X size={14} />
+                    <X size={16} />
                   </button>
                 </div>
               ) : (
                 <button
                   type="button"
                   onClick={() => heroRef.current?.click()}
-                  className="flex h-40 w-full flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 text-gray-400 transition-colors hover:border-gold-400 hover:text-gold-500"
+                  className="flex h-36 sm:h-40 w-full flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 text-gray-400 transition-colors hover:border-gold-400 hover:text-gold-500 active:bg-gray-100"
                 >
                   <ImageIcon size={24} />
-                  <span className="mt-2 text-xs">Upload Hero Image</span>
+                  <span className="mt-2 text-xs font-medium">Upload Hero Image</span>
                 </button>
               )}
               <input
@@ -192,14 +192,14 @@ export default function SettingsPage() {
                 onChange={(e) => e.target.files?.[0] && handleHeroImage(e.target.files[0])}
               />
               <p className="mt-1 text-xs text-gray-400">
-                Recommended: 1600×800px, webp format for best performance.
+                Recommended: 1600x800px, webp format for best performance.
               </p>
             </div>
           </div>
         </div>
 
-        {/* ── Payment Settings ── */}
-        <div className="card p-6">
+        {/* Payment Settings */}
+        <div className="card p-4 sm:p-6">
           <h3 className="mb-4 text-lg font-semibold text-navy-700">Payment Settings</h3>
           <div className="space-y-4">
             <div>
@@ -220,7 +220,7 @@ export default function SettingsPage() {
               {qrPreview ? (
                 <div className="relative inline-block">
                   <div className="rounded-lg border border-gray-200 p-2">
-                    <img src={qrPreview} alt="QR Code" className="h-40 w-40 object-contain" />
+                    <img src={qrPreview} alt="QR Code" className="h-36 w-36 sm:h-40 sm:w-40 object-contain" />
                   </div>
                   <button
                     type="button"
@@ -228,7 +228,7 @@ export default function SettingsPage() {
                       setQrPreview(null);
                       setQrFile(null);
                     }}
-                    className="absolute -right-2 -top-2 rounded-full bg-red-500 p-1 text-white hover:bg-red-600"
+                    className="absolute -right-2 -top-2 rounded-full bg-red-500 p-2 text-white hover:bg-red-600 min-h-[32px] min-w-[32px] flex items-center justify-center"
                   >
                     <X size={14} />
                   </button>
@@ -237,10 +237,10 @@ export default function SettingsPage() {
                 <button
                   type="button"
                   onClick={() => qrRef.current?.click()}
-                  className="flex h-32 w-40 flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 text-gray-400 transition-colors hover:border-gold-400 hover:text-gold-500"
+                  className="flex h-32 w-full sm:w-40 flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 text-gray-400 transition-colors hover:border-gold-400 hover:text-gold-500 active:bg-gray-100"
                 >
                   <Upload size={24} />
-                  <span className="mt-2 text-xs">Upload QR</span>
+                  <span className="mt-2 text-xs font-medium">Upload QR</span>
                 </button>
               )}
               <input

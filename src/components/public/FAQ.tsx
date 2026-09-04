@@ -43,7 +43,7 @@ export default function FAQ() {
   };
 
   return (
-    <section id="faq" className="mx-auto max-w-3xl px-4 py-16">
+    <section id="faq" className="mx-auto max-w-3xl px-4 py-12 sm:py-16">
       <h2 className="text-2xl font-bold text-navy-700 sm:text-3xl">
         Frequently Asked Questions
       </h2>
@@ -51,7 +51,7 @@ export default function FAQ() {
         Quick answers to the questions we hear most often.
       </p>
 
-      <div className="mt-10 space-y-4">
+      <div className="mt-8 sm:mt-10 space-y-4">
         {FAQS.map((faq, index) => {
           const isOpen = openIndex === index;
           return (
@@ -62,14 +62,14 @@ export default function FAQ() {
               <button
                 onClick={() => toggle(index)}
                 aria-expanded={isOpen}
-                className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left"
+                className="flex w-full items-center justify-between gap-4 px-4 sm:px-5 py-4 text-left min-h-[52px] active:bg-gray-50 transition-colors"
               >
-                <span className="text-sm font-semibold text-navy-700 sm:text-base">
+                <span className="text-sm font-semibold text-navy-700 sm:text-base pr-2">
                   {faq.question}
                 </span>
                 <ChevronDown
                   size={20}
-                  className={`flex-shrink-0 text-gold-400 transition-transform duration-300 ${
+                  className={`shrink-0 text-gold-400 transition-transform duration-300 ${
                     isOpen ? "rotate-180" : ""
                   }`}
                 />
@@ -80,7 +80,7 @@ export default function FAQ() {
                 }`}
               >
                 <div className="overflow-hidden">
-                  <p className="px-5 pb-5 text-sm leading-relaxed text-gray-600">
+                  <p className="px-4 sm:px-5 pb-5 text-sm leading-relaxed text-gray-600">
                     {faq.answer}
                   </p>
                 </div>

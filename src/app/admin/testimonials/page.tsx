@@ -141,9 +141,9 @@ export default function TestimonialsPage() {
 
   return (
     <div>
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h2 className="text-xl font-bold text-navy-700">Testimonials</h2>
-        <button onClick={openAdd} className="btn-gold">
+        <button onClick={openAdd} className="btn-gold self-start">
           <Plus size={16} className="mr-1" /> Add Testimonial
         </button>
       </div>
@@ -153,82 +153,124 @@ export default function TestimonialsPage() {
           <div className="h-8 w-8 animate-spin rounded-full border-4 border-gold-400 border-t-transparent" />
         </div>
       ) : testimonials.length === 0 ? (
-        <div className="card p-12 text-center text-gray-400">
+        <div className="card p-8 sm:p-12 text-center text-gray-400">
           No testimonials yet.
         </div>
       ) : (
-        <div className="card overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm">
-              <thead>
-                <tr className="border-b border-gray-100 bg-gray-50/60 text-xs font-medium uppercase tracking-wider text-gray-400">
-                  <th className="px-4 py-3">Customer</th>
-                  <th className="px-4 py-3">Rating</th>
-                  <th className="px-4 py-3">Comment</th>
-                  <th className="px-4 py-3">Status</th>
-                  <th className="px-4 py-3 text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-50">
-                {testimonials.map((t) => (
-                  <tr key={t.id} className="transition-colors hover:bg-gray-50/40">
-                    <td className="px-4 py-3 font-medium text-navy-700 whitespace-nowrap">
-                      {t.customer_name}
-                    </td>
-                    <td className="px-4 py-3 whitespace-nowrap">
-                      {renderStars(t.rating)}
-                    </td>
-                    <td className="max-w-xs px-4 py-3 text-gray-500">
-                      <p className="truncate">{t.comment}</p>
-                    </td>
-                    <td className="px-4 py-3 whitespace-nowrap">
-                      <button
-                        onClick={() => toggleActive(t)}
-                        className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium transition-colors ${
-                          t.is_active
-                            ? "bg-green-100 text-green-700"
-                            : "bg-gray-100 text-gray-500"
-                        }`}
-                      >
-                        {t.is_active ? "Active" : "Inactive"}
-                      </button>
-                    </td>
-                    <td className="px-4 py-3 text-right whitespace-nowrap">
-                      <div className="flex items-center justify-end gap-1">
-                        <button
-                          onClick={() => openEdit(t)}
-                          className="rounded-md p-1.5 text-gray-400 hover:bg-gray-100 hover:text-navy-600 transition-colors"
-                          title="Edit"
-                        >
-                          <Pencil size={15} />
-                        </button>
-                        <button
-                          onClick={() => handleDelete(t)}
-                          className="rounded-md p-1.5 text-gray-400 hover:bg-red-50 hover:text-red-600 transition-colors"
-                          title="Delete"
-                        >
-                          <Trash2 size={15} />
-                        </button>
-                      </div>
-                    </td>
+        <>
+          {/* Desktop table */}
+          <div className="hidden md:block card overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-sm">
+                <thead>
+                  <tr className="border-b border-gray-100 bg-gray-50/60 text-xs font-medium uppercase tracking-wider text-gray-400">
+                    <th className="px-4 py-3">Customer</th>
+                    <th className="px-4 py-3">Rating</th>
+                    <th className="px-4 py-3">Comment</th>
+                    <th className="px-4 py-3">Status</th>
+                    <th className="px-4 py-3 text-right">Actions</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="divide-y divide-gray-50">
+                  {testimonials.map((t) => (
+                    <tr key={t.id} className="transition-colors hover:bg-gray-50/40">
+                      <td className="px-4 py-3 font-medium text-navy-700 whitespace-nowrap">
+                        {t.customer_name}
+                      </td>
+                      <td className="px-4 py-3 whitespace-nowrap">
+                        {renderStars(t.rating)}
+                      </td>
+                      <td className="max-w-xs px-4 py-3 text-gray-500">
+                        <p className="truncate">{t.comment}</p>
+                      </td>
+                      <td className="px-4 py-3 whitespace-nowrap">
+                        <button
+                          onClick={() => toggleActive(t)}
+                          className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium transition-colors ${
+                            t.is_active
+                              ? "bg-green-100 text-green-700"
+                              : "bg-gray-100 text-gray-500"
+                          }`}
+                        >
+                          {t.is_active ? "Active" : "Inactive"}
+                        </button>
+                      </td>
+                      <td className="px-4 py-3 text-right whitespace-nowrap">
+                        <div className="flex items-center justify-end gap-1">
+                          <button
+                            onClick={() => openEdit(t)}
+                            className="rounded-md p-1.5 text-gray-400 hover:bg-gray-100 hover:text-navy-600 transition-colors"
+                            title="Edit"
+                          >
+                            <Pencil size={15} />
+                          </button>
+                          <button
+                            onClick={() => handleDelete(t)}
+                            className="rounded-md p-1.5 text-gray-400 hover:bg-red-50 hover:text-red-600 transition-colors"
+                            title="Delete"
+                          >
+                            <Trash2 size={15} />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
-        </div>
+
+          {/* Mobile card list */}
+          <div className="md:hidden space-y-3">
+            {testimonials.map((t) => (
+              <div key={t.id} className="card p-4">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0 flex-1">
+                    <p className="font-semibold text-navy-700 truncate">{t.customer_name}</p>
+                    <div className="mt-1">{renderStars(t.rating)}</div>
+                    <p className="mt-2 text-sm text-gray-500 line-clamp-2">{t.comment}</p>
+                  </div>
+                  <button
+                    onClick={() => toggleActive(t)}
+                    className={`shrink-0 inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium transition-colors ${
+                      t.is_active
+                        ? "bg-green-100 text-green-700"
+                        : "bg-gray-100 text-gray-500"
+                    }`}
+                  >
+                    {t.is_active ? "Active" : "Inactive"}
+                  </button>
+                </div>
+                <div className="mt-3 flex gap-2 border-t border-gray-50 pt-3">
+                  <button
+                    onClick={() => openEdit(t)}
+                    className="flex flex-1 items-center justify-center gap-1 rounded-md border border-gray-200 py-2.5 text-sm font-medium text-navy-600 hover:bg-gray-50 active:bg-gray-100 transition-colors min-h-[40px]"
+                  >
+                    <Pencil size={14} /> Edit
+                  </button>
+                  <button
+                    onClick={() => handleDelete(t)}
+                    className="flex flex-1 items-center justify-center gap-1 rounded-md border border-red-200 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50 active:bg-red-100 transition-colors min-h-[40px]"
+                  >
+                    <Trash2 size={14} /> Delete
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
       )}
 
       {/* Add/Edit modal */}
       {showForm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
           <div className="absolute inset-0 bg-black/40" onClick={() => setShowForm(false)} />
-          <div className="relative z-10 w-full max-w-lg rounded-xl bg-white p-6 shadow-xl">
+          <div className="relative z-10 w-full sm:max-w-lg sm:rounded-xl bg-white rounded-t-xl p-5 sm:p-6 shadow-xl max-h-[90vh] overflow-y-auto">
             <div className="mb-4 flex items-center justify-between">
               <h3 className="text-lg font-bold text-navy-700">
                 {editing ? "Edit Testimonial" : "Add Testimonial"}
               </h3>
-              <button onClick={() => setShowForm(false)} className="text-gray-400 hover:text-navy-600">
+              <button onClick={() => setShowForm(false)} className="flex h-11 w-11 items-center justify-center rounded-lg text-gray-400 hover:bg-gray-100 transition-colors">
                 <X size={20} />
               </button>
             </div>
@@ -259,10 +301,10 @@ export default function TestimonialsPage() {
                       key={i}
                       type="button"
                       onClick={() => setForm({ ...form, rating: i })}
-                      className="transition-colors hover:scale-110"
+                      className="transition-colors hover:scale-110 p-1"
                     >
                       <Star
-                        size={24}
+                        size={28}
                         className={
                           i <= form.rating
                             ? "fill-gold-400 text-gold-400"

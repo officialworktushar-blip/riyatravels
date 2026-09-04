@@ -37,23 +37,25 @@ export default async function HomePage() {
   return (
     <div>
       {/* Hero */}
-      <section className="scroll-mt-16 relative aspect-[4/3] w-full overflow-hidden bg-navy-700 sm:aspect-[16/9]">
-        {heroImageUrl ? (
-          <Image
-            src={heroImageUrl}
-            alt="Riya Travels"
-            fill
-            className="object-cover object-center"
-            sizes="100vw"
-            priority
-          />
-        ) : (
-          <div className="absolute inset-0 bg-[url('/noise.svg')] opacity-5" />
-        )}
+      <section className="scroll-mt-16 relative w-full overflow-hidden bg-navy-700">
+        <div className="relative aspect-[3/4] w-full sm:aspect-[16/9] lg:aspect-[21/9]">
+          {heroImageUrl ? (
+            <Image
+              src={heroImageUrl}
+              alt="Riya Travels"
+              fill
+              className="object-cover object-center"
+              sizes="100vw"
+              priority
+            />
+          ) : (
+            <div className="absolute inset-0 bg-[url('/noise.svg')] opacity-5" />
+          )}
+        </div>
       </section>
 
       {/* Vehicles */}
-      <section id="vehicles" className="mx-auto max-w-7xl px-4 py-16">
+      <section id="vehicles" className="mx-auto max-w-7xl px-4 py-12 sm:py-16">
         <h2 className="mb-2 text-2xl font-bold text-navy-700">Our Fleet</h2>
         <p className="mb-8 text-gray-500">Browse and book from our available vehicles</p>
         <VehicleGrid vehicles={vehicles} />

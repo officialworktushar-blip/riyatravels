@@ -62,7 +62,6 @@ export default function AvailabilityPage() {
     const occData = (occupiedRes.data as any[]) ?? [];
     const blockedData = (blockedRes.data as BlockedSlot[]) ?? [];
 
-    // Fetch bookings for status display (admin can query bookings directly)
     const { data: bookingData } = await supabase
       .from("bookings")
       .select("id, start_time, end_time, status")
@@ -85,7 +84,6 @@ export default function AvailabilityPage() {
       });
     }
 
-    // Sort by start time
     occItems.sort((a, b) => new Date(a.start_time).getTime() - new Date(b.start_time).getTime());
     setOccupied(occItems);
     setBlocked(blockedData);
@@ -185,10 +183,10 @@ export default function AvailabilityPage() {
                 <button
                   key={f.value}
                   onClick={() => setTypeFilter(f.value)}
-                  className={`rounded-full px-3 py-1 text-xs font-medium transition-all ${
+                  className={`rounded-full px-3 py-1.5 text-xs font-medium transition-all min-h-[36px] ${
                     typeFilter === f.value
                       ? "bg-navy-700 text-white"
-                      : "bg-white text-navy-600 border border-gray-200"
+                      : "bg-white text-navy-600 border border-gray-200 active:bg-gray-50"
                   }`}
                 >
                   {f.label}
@@ -206,15 +204,15 @@ export default function AvailabilityPage() {
                   <button
                     key={v.id}
                     onClick={() => selectVehicle(v)}
-                    className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm transition-colors ${
+                    className={`flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-sm transition-colors min-h-[44px] ${
                       selected?.id === v.id
                         ? "bg-gold-50 text-gold-600 font-medium"
-                        : "text-navy-600 hover:bg-gray-50"
+                        : "text-navy-600 hover:bg-gray-50 active:bg-gray-100"
                     }`}
                   >
                     <span className="text-lg">{getTypeIcon(v.type)}</span>
                     <span className="flex-1 truncate text-left">{v.name}</span>
-                    <span className={getTypeBadgeClass(v.type)}>
+                    <span className={`${getTypeBadgeClass(v.type)} shrink-0`}>
                       {v.type.charAt(0).toUpperCase() + v.type.slice(1)}
                     </span>
                   </button>
@@ -227,12 +225,12 @@ export default function AvailabilityPage() {
         {/* Timeline */}
         <div>
           {!selected ? (
-            <div className="card flex items-center justify-center py-20 text-gray-400">
+            <div className="card flex items-center justify-center py-16 sm:py-20 text-gray-400 text-sm text-center px-4">
               Select a vehicle to view its availability
             </div>
           ) : (
-            <div className="card p-5">
-              <div className="mb-4 flex items-center justify-between">
+            <div className="card p-4 sm:p-5">
+              <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                 <div className="flex items-center gap-2">
                   <span className="text-xl">{getTypeIcon(selected.type)}</span>
                   <h3 className="font-semibold text-navy-700">{selected.name}</h3>
@@ -240,7 +238,7 @@ export default function AvailabilityPage() {
                     {selected.type.charAt(0).toUpperCase() + selected.type.slice(1)}
                   </span>
                 </div>
-                <button onClick={() => setShowBlockForm(true)} className="btn-gold px-4 py-2">
+                <button onClick={() => setShowBlockForm(true)} className="btn-gold px-4 py-2 self-start">
                   <Plus size={16} className="mr-1" /> Add Block
                 </button>
               </div>
@@ -263,7 +261,7 @@ export default function AvailabilityPage() {
               {showBlockForm && (
                 <form onSubmit={handleBlock} className="mb-5 rounded-lg border border-gray-200 bg-gray-50 p-4">
                   <h4 className="mb-3 text-sm font-semibold text-navy-700">Add Blocked Slot</h4>
-                  <div className="grid gap-3 sm:grid-cols-2">
+                  <div className="grid gap-3 grid-cols-1 sm:grid-cols-2">
                     <div>
                       <label className="label-text">Start *</label>
                       <input
@@ -316,11 +314,11 @@ export default function AvailabilityPage() {
                   No bookings or blocks for this vehicle.
                 </p>
               ) : (
-                <div className="space-y-2">
+                <div className="space-y-2 overflow-x-auto">
                   {occupied.map((item) => (
-                    <div key={item.id} className={`flex items-center justify-between rounded-lg border border-l-4 p-3 ${statusColor(item)}`}>
-                      <div>
-                        <p className="text-sm font-medium text-navy-700">
+                    <div key={item.id} className={`flex items-center justify-between rounded-lg border border-l-4 p-3 gap-3 ${statusColor(item)}`}>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-sm font-medium text-navy-700 truncate">
                           {formatDateTime(item.start_time)} — {formatDateTime(item.end_time)}
                         </p>
                         <p className="text-xs text-gray-500">
@@ -337,7 +335,7 @@ export default function AvailabilityPage() {
                             )?.id;
                             if (blockedId) handleDeleteBlock(blockedId);
                           }}
-                          className="text-red-500 hover:text-red-700"
+                          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-red-500 hover:bg-red-50 active:bg-red-100 transition-colors"
                         >
                           <Trash2 size={16} />
                         </button>

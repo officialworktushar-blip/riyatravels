@@ -71,7 +71,7 @@ export default function TimeSlotPicker({
   const canProceed = data.startTime && data.endTime && data.amount > 0;
 
   return (
-    <div className="card p-6">
+    <div className="card p-4 sm:p-6">
       <h2 className="mb-4 text-lg font-semibold text-navy-700">Pick Your Time Slot</h2>
 
       {/* Date */}
@@ -122,10 +122,10 @@ export default function TimeSlotPicker({
             <button
               key={opt.hours}
               onClick={() => handleDurationSelect(opt.hours)}
-              className={`rounded-lg border px-3 py-2.5 text-sm font-medium transition-all ${
+              className={`rounded-lg border px-3 py-3 text-sm font-medium transition-all min-h-[44px] ${
                 durationHours === opt.hours
                   ? "border-gold-400 bg-gold-50 text-gold-600"
-                  : "border-gray-200 text-navy-600 hover:border-gold-300"
+                  : "border-gray-200 text-navy-600 hover:border-gold-300 active:bg-gray-50"
               }`}
             >
               {opt.label}

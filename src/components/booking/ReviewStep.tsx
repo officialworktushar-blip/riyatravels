@@ -26,7 +26,7 @@ export default function ReviewStep({
   submitting,
 }: Props) {
   return (
-    <div className="card p-6">
+    <div className="card p-4 sm:p-6">
       <h2 className="mb-4 text-lg font-semibold text-navy-700">Review & Submit</h2>
 
       <div className="space-y-4">
@@ -68,7 +68,7 @@ export default function ReviewStep({
         {/* Documents */}
         <div className="rounded-lg bg-gray-50 p-4">
           <p className="text-xs font-medium uppercase text-gray-400">Documents</p>
-          <div className="mt-1 flex gap-4 text-sm">
+          <div className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-sm">
             <span className={data.licenseFront ? "text-green-600" : "text-red-500"}>
               DL Front: {data.licenseFront ? "Uploaded" : "Missing"}
             </span>

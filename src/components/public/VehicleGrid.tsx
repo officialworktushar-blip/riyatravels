@@ -27,10 +27,10 @@ export default function VehicleGrid({ vehicles }: { vehicles: Vehicle[] }) {
           <button
             key={f.value}
             onClick={() => setFilter(f.value)}
-            className={`rounded-full px-5 py-2 text-sm font-medium transition-all ${
+            className={`rounded-full px-5 py-2.5 text-sm font-medium transition-all min-h-[44px] ${
               filter === f.value
                 ? "bg-navy-700 text-white shadow-md"
-                : "bg-white text-navy-600 border border-gray-200 hover:border-navy-300"
+                : "bg-white text-navy-600 border border-gray-200 hover:border-navy-300 active:bg-gray-50"
             }`}
           >
             {f.label}
@@ -44,7 +44,7 @@ export default function VehicleGrid({ vehicles }: { vehicles: Vehicle[] }) {
           No vehicles found for this category.
         </p>
       ) : (
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((vehicle) => (
             <VehicleCard key={vehicle.id} vehicle={vehicle} />
           ))}

@@ -30,7 +30,7 @@ export default function CustomerForm({ data, updateData, onBack, onNext }: Props
   };
 
   return (
-    <div className="card p-6">
+    <div className="card p-4 sm:p-6">
       <h2 className="mb-4 text-lg font-semibold text-navy-700">Your Details</h2>
 
       {/* Honeypot — hidden from humans */}

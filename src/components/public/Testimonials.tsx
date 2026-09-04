@@ -9,7 +9,7 @@ export default function Testimonials({
   const active = testimonials.filter((t) => t.is_active);
 
   return (
-    <section className="mx-auto max-w-7xl px-4 py-16">
+    <section className="mx-auto max-w-7xl px-4 py-12 sm:py-16">
       <h2 className="text-2xl font-bold text-navy-700 sm:text-3xl">
         What Our Customers Say
       </h2>
@@ -22,11 +22,11 @@ export default function Testimonials({
           No testimonials yet.
         </p>
       ) : (
-        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-8 sm:mt-10 grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
           {active.map((t) => (
             <figure
               key={t.id}
-              className="flex flex-col rounded-xl border border-gray-100 bg-white p-6 shadow-sm transition-all hover:shadow-md"
+              className="flex flex-col rounded-xl border border-gray-100 bg-white p-5 sm:p-6 shadow-sm transition-all hover:shadow-md"
             >
               <Quote className="mb-4 text-gold-400" size={28} />
               <div className="mb-4 flex items-center gap-1">
@@ -43,7 +43,7 @@ export default function Testimonials({
                 ))}
               </div>
               <blockquote className="flex-1 text-sm leading-relaxed text-gray-600">
-                “{t.comment}”
+                &ldquo;{t.comment}&rdquo;
               </blockquote>
               <figcaption className="mt-5 text-sm font-semibold text-navy-700">
                 — {t.customer_name}

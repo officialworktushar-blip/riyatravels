@@ -9,34 +9,60 @@
     --color-bg: #F7F7F5;
   }
 
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
     @apply bg-[var(--color-bg)] text-navy-700 antialiased;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  input, textarea, select {
+    font-size: 16px;
+  }
+
+  img {
+    display: block;
+    max-width: 100%;
   }
 }
 
 @layer components {
   .btn-primary {
     @apply inline-flex items-center justify-center rounded-lg bg-navy-700 px-6 py-3 text-sm font-semibold text-white shadow-sm transition-all hover:bg-navy-600 active:bg-navy-800 disabled:opacity-50 disabled:cursor-not-allowed;
+    min-height: 44px;
+    min-width: 44px;
   }
 
   .btn-gold {
     @apply inline-flex items-center justify-center rounded-lg bg-gold-400 px-6 py-3 text-sm font-semibold text-navy-700 shadow-sm transition-all hover:bg-gold-300 active:bg-gold-500 disabled:opacity-50 disabled:cursor-not-allowed;
+    min-height: 44px;
+    min-width: 44px;
   }
 
   .btn-outline {
     @apply inline-flex items-center justify-center rounded-lg border-2 border-navy-700 px-6 py-3 text-sm font-semibold text-navy-700 transition-all hover:bg-navy-700 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed;
+    min-height: 44px;
+    min-width: 44px;
   }
 
   .btn-danger {
     @apply inline-flex items-center justify-center rounded-lg bg-red-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition-all hover:bg-red-700 active:bg-red-800 disabled:opacity-50 disabled:cursor-not-allowed;
+    min-height: 44px;
+    min-width: 44px;
   }
 
   .btn-ghost {
     @apply inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-medium text-navy-600 transition-all hover:bg-navy-50;
+    min-height: 44px;
+    min-width: 44px;
   }
 
   .input-field {
     @apply w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm text-navy-700 placeholder:text-gray-400 focus:border-gold-400 focus:outline-none focus:ring-2 focus:ring-gold-400/20 transition-colors;
+    font-size: 16px;
+    min-height: 44px;
   }
 
   .label-text {

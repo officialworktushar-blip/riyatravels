@@ -193,9 +193,9 @@ export default function VehiclesPage() {
 
   return (
     <div>
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h2 className="text-xl font-bold text-navy-700">Vehicles</h2>
-        <button onClick={openAdd} className="btn-gold">
+        <button onClick={openAdd} className="btn-gold self-start">
           <Plus size={16} className="mr-1" /> Add Vehicle
         </button>
       </div>
@@ -206,10 +206,10 @@ export default function VehiclesPage() {
           <button
             key={f.value}
             onClick={() => setFilter(f.value)}
-            className={`rounded-full px-4 py-1.5 text-sm font-medium transition-all ${
+            className={`rounded-full px-4 py-2 text-sm font-medium transition-all min-h-[40px] ${
               filter === f.value
                 ? "bg-navy-700 text-white"
-                : "bg-white text-navy-600 border border-gray-200"
+                : "bg-white text-navy-600 border border-gray-200 active:bg-gray-50"
             }`}
           >
             {f.label}
@@ -228,26 +228,26 @@ export default function VehiclesPage() {
           <div className="h-8 w-8 animate-spin rounded-full border-4 border-gold-400 border-t-transparent" />
         </div>
       ) : (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((v) => (
             <div key={v.id} className="card p-4">
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-3 sm:gap-4">
                 {v.image_url ? (
-                  <img src={v.image_url} alt={v.name} className="h-16 w-16 rounded-lg object-cover" />
+                  <img src={v.image_url} alt={v.name} className="h-14 w-14 sm:h-16 sm:w-16 rounded-lg object-cover shrink-0" />
                 ) : (
-                  <div className="flex h-16 w-16 items-center justify-center rounded-lg bg-gray-100 text-2xl">
+                  <div className="flex h-14 w-14 sm:h-16 sm:w-16 items-center justify-center rounded-lg bg-gray-100 text-2xl shrink-0">
                     {getTypeIcon(v.type)}
                   </div>
                 )}
                 <div className="min-w-0 flex-1">
-                  <p className="truncate font-semibold text-navy-700">{v.name}</p>
+                  <p className="truncate font-semibold text-navy-700 text-sm sm:text-base">{v.name}</p>
                   <span className={getTypeBadgeClass(v.type)}>
                     {v.type.charAt(0).toUpperCase() + v.type.slice(1)}
                   </span>
                 </div>
                 <button
                   onClick={() => toggleActive(v)}
-                  className={`relative h-6 w-11 rounded-full transition-colors ${
+                  className={`relative h-6 w-11 rounded-full transition-colors shrink-0 ${
                     v.is_active ? "bg-green-500" : "bg-gray-300"
                   }`}
                   title={v.is_active ? "Active" : "Inactive"}
@@ -280,13 +280,13 @@ export default function VehiclesPage() {
               <div className="mt-4 flex gap-2 border-t border-gray-50 pt-3">
                 <button
                   onClick={() => openEdit(v)}
-                  className="flex flex-1 items-center justify-center gap-1 rounded-md border border-gray-200 py-1.5 text-sm font-medium text-navy-600 hover:bg-gray-50 transition-colors"
+                  className="flex flex-1 items-center justify-center gap-1 rounded-md border border-gray-200 py-2.5 text-sm font-medium text-navy-600 hover:bg-gray-50 active:bg-gray-100 transition-colors min-h-[40px]"
                 >
                   <Pencil size={14} /> Edit
                 </button>
                 <button
                   onClick={() => handleDelete(v)}
-                  className="flex flex-1 items-center justify-center gap-1 rounded-md border border-red-200 py-1.5 text-sm font-medium text-red-600 hover:bg-red-50 transition-colors"
+                  className="flex flex-1 items-center justify-center gap-1 rounded-md border border-red-200 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50 active:bg-red-100 transition-colors min-h-[40px]"
                 >
                   <Trash2 size={14} /> Delete
                 </button>
@@ -298,14 +298,14 @@ export default function VehiclesPage() {
 
       {/* Add/Edit modal */}
       {showForm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
           <div className="absolute inset-0 bg-black/40" onClick={() => setShowForm(false)} />
-          <div className="relative z-10 w-full max-w-lg rounded-xl bg-white p-6 shadow-xl">
+          <div className="relative z-10 w-full sm:max-w-lg sm:rounded-xl bg-white rounded-t-xl p-5 sm:p-6 shadow-xl max-h-[90vh] overflow-y-auto">
             <div className="mb-4 flex items-center justify-between">
               <h3 className="text-lg font-bold text-navy-700">
                 {editing ? "Edit Vehicle" : "Add Vehicle"}
               </h3>
-              <button onClick={() => setShowForm(false)} className="text-gray-400 hover:text-navy-600">
+              <button onClick={() => setShowForm(false)} className="flex h-11 w-11 items-center justify-center rounded-lg text-gray-400 hover:bg-gray-100 transition-colors">
                 <X size={20} />
               </button>
             </div>
@@ -317,7 +317,7 @@ export default function VehiclesPage() {
             )}
 
             <form onSubmit={handleSave} className="space-y-4">
-              <div className="grid gap-4 sm:grid-cols-2">
+              <div className="grid gap-4 grid-cols-1 sm:grid-cols-2">
                 <div>
                   <label className="label-text">Type *</label>
                   <select
@@ -354,19 +354,19 @@ export default function VehiclesPage() {
                         setImagePreview(null);
                         setImageFile(null);
                       }}
-                      className="absolute right-2 top-2 rounded-full bg-red-500 p-1 text-white hover:bg-red-600"
+                      className="absolute right-2 top-2 rounded-full bg-red-500 p-2 text-white hover:bg-red-600 min-h-[36px] min-w-[36px] flex items-center justify-center"
                     >
-                      <X size={14} />
+                      <X size={16} />
                     </button>
                   </div>
                 ) : (
                   <button
                     type="button"
                     onClick={() => fileRef.current?.click()}
-                    className="flex h-32 w-full flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 text-gray-400 transition-colors hover:border-gold-400 hover:text-gold-500"
+                    className="flex h-32 w-full flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 text-gray-400 transition-colors hover:border-gold-400 hover:text-gold-500 active:bg-gray-100"
                   >
                     <Upload size={24} />
-                    <span className="mt-2 text-xs">Upload Image</span>
+                    <span className="mt-2 text-xs font-medium">Upload Image</span>
                   </button>
                 )}
                 <input
@@ -378,9 +378,9 @@ export default function VehiclesPage() {
                 />
               </div>
 
-              <div className="grid gap-4 sm:grid-cols-2">
+              <div className="grid gap-4 grid-cols-1 sm:grid-cols-2">
                 <div>
-                  <label className="label-text">Rate Per Hour (₹) *</label>
+                  <label className="label-text">Rate Per Hour (Rs.) *</label>
                   <input
                     type="number"
                     step="0.01"
@@ -392,7 +392,7 @@ export default function VehiclesPage() {
                   />
                 </div>
                 <div>
-                  <label className="label-text">Rate Per Day (₹) *</label>
+                  <label className="label-text">Rate Per Day (Rs.) *</label>
                   <input
                     type="number"
                     step="0.01"

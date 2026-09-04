@@ -45,7 +45,7 @@ export default function LoginPage() {
           <p className="mt-2 text-sm text-gray-500">Admin Login</p>
         </div>
 
-        <div className="card p-6">
+        <div className="card p-5 sm:p-6">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="label-text">Email</label>
@@ -64,7 +64,7 @@ export default function LoginPage() {
               <div className="relative">
                 <input
                   type={showPassword ? "text" : "password"}
-                  className="input-field pr-10"
+                  className="input-field pr-12"
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -73,7 +73,7 @@ export default function LoginPage() {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-navy-600"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 flex h-10 w-10 items-center justify-center rounded-lg text-gray-400 hover:text-navy-600 active:bg-gray-100 transition-colors"
                 >
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>

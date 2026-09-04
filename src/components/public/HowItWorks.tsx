@@ -27,7 +27,7 @@ const STEPS = [
 
 export default function HowItWorks() {
   return (
-    <section className="mx-auto max-w-7xl px-4 py-16">
+    <section className="mx-auto max-w-7xl px-4 py-12 sm:py-16">
       <h2 className="text-2xl font-bold text-navy-700 sm:text-3xl">
         How It Works
       </h2>
@@ -35,18 +35,18 @@ export default function HowItWorks() {
         Getting on the road is as easy as one, two, three, four.
       </p>
 
-      <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mt-8 sm:mt-10 grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
         {STEPS.map((step, i) => (
-          <div key={step.title} className="card flex flex-col items-center p-6 text-center">
+          <div key={step.title} className="card flex flex-col items-center p-5 sm:p-6 text-center">
             <div className="relative mb-4">
-              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gold-400 text-navy-700">
-                <step.icon size={28} />
+              <div className="flex h-14 w-14 sm:h-16 sm:w-16 items-center justify-center rounded-full bg-gold-400 text-navy-700">
+                <step.icon size={26} />
               </div>
               <span className="absolute -right-2 -top-2 flex h-7 w-7 items-center justify-center rounded-full border-2 border-white bg-navy-700 text-xs font-bold text-white">
                 {i + 1}
               </span>
             </div>
-            <h3 className="text-lg font-semibold text-navy-700">{step.title}</h3>
+            <h3 className="text-base sm:text-lg font-semibold text-navy-700">{step.title}</h3>
             <p className="mt-2 text-sm text-gray-500">{step.description}</p>
           </div>
         ))}

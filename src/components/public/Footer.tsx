@@ -35,24 +35,24 @@ export default function Footer() {
             <h3 className="text-sm font-semibold uppercase tracking-wider text-white">
               Quick Links
             </h3>
-            <ul className="mt-4 space-y-2 text-sm">
+            <ul className="mt-4 space-y-1 text-sm">
               <li>
-                <Link href="/" className="transition-colors hover:text-gold-400">
+                <Link href="/" className="block rounded-lg px-2 py-2 transition-colors hover:text-gold-400 min-h-[44px] flex items-center">
                   Home
                 </Link>
               </li>
               <li>
-                <Link href="/#vehicles" className="transition-colors hover:text-gold-400">
+                <Link href="/#vehicles" className="block rounded-lg px-2 py-2 transition-colors hover:text-gold-400 min-h-[44px] flex items-center">
                   Vehicles
                 </Link>
               </li>
               <li>
-                <Link href="/about" className="transition-colors hover:text-gold-400">
+                <Link href="/about" className="block rounded-lg px-2 py-2 transition-colors hover:text-gold-400 min-h-[44px] flex items-center">
                   About
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="transition-colors hover:text-gold-400">
+                <Link href="/contact" className="block rounded-lg px-2 py-2 transition-colors hover:text-gold-400 min-h-[44px] flex items-center">
                   Contact
                 </Link>
               </li>
@@ -64,68 +64,62 @@ export default function Footer() {
             <h3 className="text-sm font-semibold uppercase tracking-wider text-white">
               Contact
             </h3>
-            <ul className="mt-4 space-y-3 text-sm">
-              <li className="flex items-center gap-2">
-                <Phone size={16} className="text-gold-400" />
+            <ul className="mt-4 space-y-2 text-sm">
+              <li>
                 <a
                   href="https://wa.me/918490048239"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="transition-colors hover:text-gold-400"
+                  className="flex items-center gap-2 rounded-lg px-2 py-2 transition-colors hover:text-gold-400 min-h-[44px]"
                 >
-                  +91 84900 48239
+                  <Phone size={16} className="text-gold-400 shrink-0" />
+                  <span>+91 84900 48239</span>
                 </a>
               </li>
-              <li className="flex items-center gap-2">
-                <Mail size={16} className="text-gold-400" />
+              <li>
                 <a
                   href="mailto:scooty.riyatravels@gmail.com"
-                  className="transition-colors hover:text-gold-400"
+                  className="flex items-center gap-2 rounded-lg px-2 py-2 transition-colors hover:text-gold-400 min-h-[44px]"
                 >
-                  scooty.riyatravels@gmail.com
+                  <Mail size={16} className="text-gold-400 shrink-0" />
+                  <span className="break-all">scooty.riyatravels@gmail.com</span>
                 </a>
               </li>
-              <li className="flex items-center gap-2">
-                <MapPin size={16} className="text-gold-400" />
+              <li>
                 <a
                   href="https://www.google.com/maps?q=21,+Nr.+Pratapnagar+Bridge,+Lalbaug+Road,+Pratapnagar,+Vadodara,+Gujarat,+India"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="transition-colors hover:text-gold-400"
+                  className="flex items-center gap-2 rounded-lg px-2 py-2 transition-colors hover:text-gold-400 min-h-[44px]"
                 >
-                  21, Nr. Pratapnagar Bridge, Vadodara
+                  <MapPin size={16} className="text-gold-400 shrink-0" />
+                  <span>21, Nr. Pratapnagar Bridge, Vadodara</span>
                 </a>
               </li>
               <li className="pt-2">
-                <ul className="flex items-center gap-3">
-                  <li>
-                    <a
-                      href="#"
-                      aria-label="Facebook"
-                      className="flex h-9 w-9 items-center justify-center rounded-full bg-navy-600 text-white transition-colors hover:bg-gold-400 hover:text-navy-700"
-                    >
-                      <Facebook size={16} />
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      aria-label="Instagram"
-                      className="flex h-9 w-9 items-center justify-center rounded-full bg-navy-600 text-white transition-colors hover:bg-gold-400 hover:text-navy-700"
-                    >
-                      <Instagram size={16} />
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      aria-label="Twitter"
-                      className="flex h-9 w-9 items-center justify-center rounded-full bg-navy-600 text-white transition-colors hover:bg-gold-400 hover:text-navy-700"
-                    >
-                      <Twitter size={16} />
-                    </a>
-                  </li>
-                </ul>
+                <div className="flex items-center gap-3">
+                  <a
+                    href="#"
+                    aria-label="Facebook"
+                    className="flex h-11 w-11 items-center justify-center rounded-full bg-navy-600 text-white transition-colors hover:bg-gold-400 hover:text-navy-700"
+                  >
+                    <Facebook size={16} />
+                  </a>
+                  <a
+                    href="#"
+                    aria-label="Instagram"
+                    className="flex h-11 w-11 items-center justify-center rounded-full bg-navy-600 text-white transition-colors hover:bg-gold-400 hover:text-navy-700"
+                  >
+                    <Instagram size={16} />
+                  </a>
+                  <a
+                    href="#"
+                    aria-label="Twitter"
+                    className="flex h-11 w-11 items-center justify-center rounded-full bg-navy-600 text-white transition-colors hover:bg-gold-400 hover:text-navy-700"
+                  >
+                    <Twitter size={16} />
+                  </a>
+                </div>
               </li>
             </ul>
           </div>
@@ -134,7 +128,7 @@ export default function Footer() {
 
       <div className="border-t border-navy-600">
         <p className="mx-auto max-w-7xl px-4 py-5 text-center text-xs text-gray-400">
-          © {year} Riya Travels. All rights reserved.
+          &copy; {year} Riya Travels. All rights reserved.
         </p>
       </div>
     </footer>

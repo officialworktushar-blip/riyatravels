@@ -67,7 +67,7 @@ export default function AboutPage() {
   return (
     <div>
       {/* Header */}
-      <section className="mx-auto max-w-4xl px-4 pt-16 pb-4">
+      <section className="mx-auto max-w-4xl px-4 pt-12 sm:pt-16 pb-4">
         <h1 className="text-3xl font-bold text-navy-700 sm:text-4xl">
           About <span className="text-gold-400">Riya Travels</span>
         </h1>
@@ -78,9 +78,9 @@ export default function AboutPage() {
       </section>
 
       {/* Our Story */}
-      <section className="mx-auto max-w-4xl px-4 py-16">
+      <section className="mx-auto max-w-4xl px-4 py-10 sm:py-16">
         <h2 className="text-2xl font-bold text-navy-700 sm:text-3xl">Our Story</h2>
-        <div className="mt-6 space-y-5 text-base leading-relaxed text-gray-600 sm:text-lg">
+        <div className="mt-6 space-y-5 text-base leading-relaxed text-gray-600">
           <p>
             Riya Travels started with a simple frustration: renting a scooter, bike,
             or car was always a chore. Filling out endless forms, waiting for
@@ -95,10 +95,10 @@ export default function AboutPage() {
             directly via UPI. No card, no paperwork-heavy contracts, no surprises.
           </p>
           <p>
-            We're a small, local team that takes personal pride in every vehicle we
+            We&apos;re a small, local team that takes personal pride in every vehicle we
             send out. Our rides are maintained and ready, our verification is quick,
             and our support — over WhatsApp, of course — is real and human. Whether
-            it's a trip to the market, a long weekend drive, or a daily commute, we're
+            it&apos;s a trip to the market, a long weekend drive, or a daily commute, we&apos;re
             here to keep you moving.
           </p>
         </div>
@@ -116,7 +116,7 @@ export default function AboutPage() {
       </section>
 
       {/* Mission / Values */}
-      <section className="bg-white py-16">
+      <section className="bg-white py-12 sm:py-16">
         <div className="mx-auto max-w-7xl px-4">
           <h2 className="text-2xl font-bold text-navy-700 sm:text-3xl">
             What We Stand For
@@ -125,16 +125,16 @@ export default function AboutPage() {
             The values that guide every booking, every ride, and every conversation.
           </p>
 
-          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-8 sm:mt-10 grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
             {VALUES.map((value) => (
               <div
                 key={value.title}
-                className="rounded-xl border border-gray-100 bg-[#F7F7F5] p-6 shadow-sm transition-all hover:shadow-md"
+                className="rounded-xl border border-gray-100 bg-[#F7F7F5] p-5 sm:p-6 shadow-sm transition-all hover:shadow-md"
               >
-                <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-gold-400 text-navy-700">
-                  <value.icon size={26} />
+                <div className="mb-4 flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full bg-gold-400 text-navy-700">
+                  <value.icon size={24} />
                 </div>
-                <h3 className="text-lg font-semibold text-navy-700">{value.title}</h3>
+                <h3 className="text-base sm:text-lg font-semibold text-navy-700">{value.title}</h3>
                 <p className="mt-2 text-sm text-gray-500">{value.description}</p>
               </div>
             ))}
@@ -143,25 +143,25 @@ export default function AboutPage() {
       </section>
 
       {/* Why Rent With Us */}
-      <section className="mx-auto max-w-7xl px-4 py-16">
+      <section className="mx-auto max-w-7xl px-4 py-12 sm:py-16">
         <h2 className="text-2xl font-bold text-navy-700 sm:text-3xl">
           Why Rent With Us
         </h2>
         <p className="mt-2 max-w-2xl text-gray-500">
-          We keep things refreshingly simple. Here's what you can expect every time
+          We keep things refreshingly simple. Here&apos;s what you can expect every time
           you ride with Riya Travels.
         </p>
 
-        <div className="mt-10 grid gap-6 md:grid-cols-3">
+        <div className="mt-8 sm:mt-10 grid gap-4 sm:gap-6 grid-cols-1 md:grid-cols-3">
           {PROMISES.map((promise) => (
             <div
               key={promise.title}
-              className="rounded-xl border border-gray-100 bg-white p-6 shadow-sm transition-all hover:shadow-md"
+              className="rounded-xl border border-gray-100 bg-white p-5 sm:p-6 shadow-sm transition-all hover:shadow-md"
             >
-              <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-gold-50 text-gold-500">
-                <promise.icon size={26} />
+              <div className="mb-4 flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full bg-gold-50 text-gold-500">
+                <promise.icon size={24} />
               </div>
-              <h3 className="text-lg font-semibold text-navy-700">{promise.title}</h3>
+              <h3 className="text-base sm:text-lg font-semibold text-navy-700">{promise.title}</h3>
               <p className="mt-2 text-sm leading-relaxed text-gray-600">
                 {promise.text}
               </p>
@@ -179,7 +179,7 @@ export default function AboutPage() {
       <FAQ />
 
       {/* CTA */}
-      <section className="bg-navy-700 py-16">
+      <section className="bg-navy-700 py-12 sm:py-16">
         <div className="mx-auto max-w-3xl px-4 text-center">
           <h2 className="text-2xl font-bold text-white sm:text-3xl">
             Ready to hit the road?
@@ -187,7 +187,7 @@ export default function AboutPage() {
           <p className="mt-3 text-gray-300">
             Browse our fleet, pick your ride, and be on your way in minutes.
           </p>
-          <div className="mt-8 flex flex-wrap justify-center gap-3">
+          <div className="mt-8 flex flex-col sm:flex-row flex-wrap justify-center gap-3">
             <Link href="/#vehicles" className="btn-gold">
               Browse Vehicles
             </Link>

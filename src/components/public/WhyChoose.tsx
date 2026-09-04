@@ -27,7 +27,7 @@ const FEATURES = [
 
 export default function WhyChoose() {
   return (
-    <section className="mx-auto max-w-7xl px-4 py-16">
+    <section className="mx-auto max-w-7xl px-4 py-12 sm:py-16">
       <h2 className="text-2xl font-bold text-navy-700 sm:text-3xl">
         Why Choose Riya Travels
       </h2>
@@ -35,16 +35,16 @@ export default function WhyChoose() {
         Everything you need for a smooth, stress-free rental experience.
       </p>
 
-      <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mt-8 sm:mt-10 grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
         {FEATURES.map((feature) => (
           <div
             key={feature.title}
-            className="rounded-xl border border-gray-100 bg-white p-6 shadow-sm transition-all hover:shadow-md"
+            className="rounded-xl border border-gray-100 bg-white p-5 sm:p-6 shadow-sm transition-all hover:shadow-md"
           >
-            <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-gold-50 text-gold-500">
-              <feature.icon size={26} />
+            <div className="mb-4 flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full bg-gold-50 text-gold-500">
+              <feature.icon size={24} />
             </div>
-            <h3 className="text-lg font-semibold text-navy-700">{feature.title}</h3>
+            <h3 className="text-base sm:text-lg font-semibold text-navy-700">{feature.title}</h3>
             <p className="mt-2 text-sm text-gray-500">{feature.description}</p>
           </div>
         ))}

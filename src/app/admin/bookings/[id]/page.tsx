@@ -11,7 +11,7 @@ import {
   formatCurrency,
   getTypeIcon,
 } from "@/lib/utils";
-import { ArrowLeft, Check, X, Ban, Loader2, MessageCircle } from "lucide-react";
+import { ArrowLeft, Check, X, Ban, Loader2, MessageCircle, ZoomIn, XIcon } from "lucide-react";
 
 interface SignedImage {
   path: string;
@@ -39,6 +39,40 @@ function useDocumentViewer() {
   return { images, setImages, loadSignedUrl, loading, setLoading };
 }
 
+function Lightbox({
+  image,
+  onClose,
+}: {
+  image: SignedImage | null;
+  onClose: () => void;
+}) {
+  if (!image) return null;
+
+  return (
+    <div
+      className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 p-4"
+      onClick={onClose}
+    >
+      <button
+        onClick={onClose}
+        className="absolute right-4 top-4 flex h-11 w-11 items-center justify-center rounded-full bg-white/20 text-white hover:bg-white/30 transition-colors z-10"
+      >
+        <XIcon size={22} />
+      </button>
+      <div className="relative max-h-[85vh] max-w-full" onClick={(e) => e.stopPropagation()}>
+        <img
+          src={image.url}
+          alt={image.label}
+          className="max-h-[80vh] max-w-full rounded-lg object-contain"
+        />
+        <p className="mt-2 text-center text-sm font-medium text-white/80">
+          {image.label}
+        </p>
+      </div>
+    </div>
+  );
+}
+
 export default function BookingDetailPage() {
   const params = useParams();
   const router = useRouter();
@@ -50,6 +84,7 @@ export default function BookingDetailPage() {
   const [note, setNote] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [emailStatus, setEmailStatus] = useState("");
+  const [lightboxImage, setLightboxImage] = useState<SignedImage | null>(null);
   const { images, setImages, loadSignedUrl } = useDocumentViewer();
 
   const supabase = createClient();
@@ -57,6 +92,15 @@ export default function BookingDetailPage() {
   useEffect(() => {
     loadBooking();
   }, [bookingId]);
+
+  useEffect(() => {
+    if (lightboxImage) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => { document.body.style.overflow = ""; };
+  }, [lightboxImage]);
 
   const loadBooking = async () => {
     setLoading(true);
@@ -67,7 +111,6 @@ export default function BookingDetailPage() {
       .single();
     if (data) {
       setBooking(data as Booking);
-      // Load signed URLs for documents
       const b = data as Booking;
       const proms: Promise<void>[] = [];
       if (b.license_front_url)
@@ -98,13 +141,11 @@ export default function BookingDetailPage() {
       .eq("id", bookingId);
 
     if (updateErr) {
-      // Handle overlap for approve (shouldn't normally happen if slot is free)
       setError(updateErr.message.includes("23P01") ? "Slot overlap detected. The times may already be booked." : updateErr.message);
       setActionLoading(null);
       return;
     }
 
-    // Send confirmation email on approve
     if (status === "approved") {
       setEmailStatus("sending");
       try {
@@ -149,12 +190,12 @@ export default function BookingDetailPage() {
 
   const getAdminNotifyUrl = () => {
     const msg = encodeURIComponent(
-      `🚗 *New Booking Received!*%0A%0A` +
+      `New Booking Received!%0A%0A` +
       `Customer: ${booking.customer_name}%0A` +
       `Vehicle: ${vehicle?.name || "N/A"}%0A` +
       `From: ${formatDateTime(booking.start_time)}%0A` +
       `To: ${formatDateTime(booking.end_time)}%0A` +
-      `Amount: ₹${booking.amount}%0A` +
+      `Amount: Rs.${booking.amount}%0A` +
       `WhatsApp: ${booking.customer_whatsapp}`
     );
     return `https://wa.me/${ADMIN_WHATSAPP}?text=${msg}`;
@@ -164,7 +205,7 @@ export default function BookingDetailPage() {
     const phone = booking.customer_whatsapp.replace(/[^0-9]/g, "");
     const msg = encodeURIComponent(
       `Hi ${booking.customer_name},%0A%0A` +
-      `This is from Riya Travels. We have received your booking for *${vehicle?.name || "N/A"}* and are reviewing it.%0A%0A` +
+      `This is from Riya Travels. We have received your booking for ${vehicle?.name || "N/A"} and are reviewing it.%0A%0A` +
       `We will get back to you shortly.`
     );
     return `https://wa.me/${phone}?text=${msg}`;
@@ -173,12 +214,12 @@ export default function BookingDetailPage() {
   const getCustomerNotifyUrl = () => {
     const phone = booking.customer_whatsapp.replace(/[^0-9]/g, "");
     const msg = encodeURIComponent(
-      `✅ *Booking Approved!*%0A%0A` +
+      `Booking Approved!%0A%0A` +
       `Hi ${booking.customer_name},%0A` +
-      `Your booking for *${vehicle?.name || "N/A"}* has been approved!%0A%0A` +
+      `Your booking for ${vehicle?.name || "N/A"} has been approved!%0A%0A` +
       `From: ${formatDateTime(booking.start_time)}%0A` +
       `To: ${formatDateTime(booking.end_time)}%0A` +
-      `Amount: ₹${booking.amount}%0A%0A` +
+      `Amount: Rs.${booking.amount}%0A%0A` +
       `Thank you for choosing Riya Travels!`
     );
     return `https://wa.me/${phone}?text=${msg}`;
@@ -186,9 +227,11 @@ export default function BookingDetailPage() {
 
   return (
     <div className="max-w-4xl">
+      <Lightbox image={lightboxImage} onClose={() => setLightboxImage(null)} />
+
       <Link
         href="/admin/dashboard"
-        className="mb-6 inline-flex items-center gap-1 text-sm font-medium text-navy-600 hover:text-gold-400 transition-colors"
+        className="mb-4 sm:mb-6 inline-flex items-center gap-1 text-sm font-medium text-navy-600 hover:text-gold-400 transition-colors min-h-[44px]"
       >
         <ArrowLeft size={16} /> Back to Bookings
       </Link>
@@ -212,28 +255,25 @@ export default function BookingDetailPage() {
       {/* WhatsApp notification links */}
       {booking.status === "pending_review" && (
         <div className="mb-6 rounded-lg border border-blue-200 bg-blue-50 p-4">
-          <p className="mb-2 text-sm font-medium text-blue-800">Contact customer on WhatsApp:</p>
-          <div className="flex flex-wrap items-center gap-3">
-            <a
-              href={getCustomerContactUrl()}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 transition-colors"
-            >
-              <MessageCircle size={16} /> Contact {booking.customer_whatsapp}
-            </a>
-            <span className="text-xs text-blue-600">Customer&apos;s WhatsApp number from booking details</span>
-          </div>
+          <p className="mb-3 text-sm font-medium text-blue-800">Contact customer on WhatsApp:</p>
+          <a
+            href={getCustomerContactUrl()}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 rounded-lg bg-green-600 px-4 py-3 text-sm font-medium text-white hover:bg-green-700 transition-colors min-h-[44px]"
+          >
+            <MessageCircle size={16} /> Contact {booking.customer_whatsapp}
+          </a>
         </div>
       )}
       {booking.status === "approved" && (
         <div className="mb-6 rounded-lg border border-green-200 bg-green-50 p-4">
-          <p className="mb-2 text-sm font-medium text-green-800">Notify customer on WhatsApp:</p>
+          <p className="mb-3 text-sm font-medium text-green-800">Notify customer on WhatsApp:</p>
           <a
             href={getCustomerNotifyUrl()}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 transition-colors"
+            className="inline-flex items-center gap-2 rounded-lg bg-green-600 px-4 py-3 text-sm font-medium text-white hover:bg-green-700 transition-colors min-h-[44px]"
           >
             <MessageCircle size={16} /> Send to {booking.customer_whatsapp}
           </a>
@@ -241,31 +281,29 @@ export default function BookingDetailPage() {
       )}
 
       {/* Header */}
-      <div className="card mb-6 p-6">
-        <div className="flex flex-wrap items-center justify-between gap-4">
+      <div className="card mb-4 sm:mb-6 p-4 sm:p-6">
+        <div className="flex flex-wrap items-start sm:items-center justify-between gap-3">
           <div>
-            <h2 className="text-xl font-bold text-navy-700">
+            <h2 className="text-lg sm:text-xl font-bold text-navy-700">
               {booking.customer_name}
             </h2>
             <p className="mt-1 text-sm text-gray-500">
               Submitted {formatDateTime(booking.created_at)}
             </p>
           </div>
-          <div className="flex items-center gap-2">
-            <span
-              className={`${
-                booking.status === "pending_review"
-                  ? "badge-pending"
-                  : booking.status === "approved"
-                    ? "badge-approved"
-                    : booking.status === "rejected"
-                      ? "badge-rejected"
-                      : "badge-cancelled"
-              } text-base px-4 py-1`}
-            >
-              {booking.status.replace("_", " ").toUpperCase()}
-            </span>
-          </div>
+          <span
+            className={`${
+              booking.status === "pending_review"
+                ? "badge-pending"
+                : booking.status === "approved"
+                  ? "badge-approved"
+                  : booking.status === "rejected"
+                    ? "badge-rejected"
+                    : "badge-cancelled"
+            } text-sm sm:text-base px-3 sm:px-4 py-1`}
+          >
+            {booking.status.replace("_", " ").toUpperCase()}
+          </span>
         </div>
 
         {booking.admin_note && (
@@ -276,8 +314,8 @@ export default function BookingDetailPage() {
       </div>
 
       {/* Details */}
-      <div className="mb-6 grid gap-4 sm:grid-cols-2">
-        <div className="card p-5">
+      <div className="mb-4 sm:mb-6 grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2">
+        <div className="card p-4 sm:p-5">
           <h3 className="mb-3 text-sm font-semibold text-navy-700">Vehicle</h3>
           <div className="flex items-center gap-3">
             <span className="text-2xl">{getTypeIcon(vehicle?.type || "car")}</span>
@@ -292,7 +330,7 @@ export default function BookingDetailPage() {
           </div>
         </div>
 
-        <div className="card p-5">
+        <div className="card p-4 sm:p-5">
           <h3 className="mb-3 text-sm font-semibold text-navy-700">Time Slot</h3>
           <p className="text-sm text-gray-600">
             <span className="font-medium text-navy-700">{formatDateTime(booking.start_time)}</span>
@@ -306,16 +344,16 @@ export default function BookingDetailPage() {
       </div>
 
       {/* Customer info */}
-      <div className="card mb-6 p-5">
+      <div className="card mb-4 sm:mb-6 p-4 sm:p-5">
         <h3 className="mb-3 text-sm font-semibold text-navy-700">Customer</h3>
         <div className="space-y-1.5 text-sm text-gray-600">
           <p><span className="font-medium text-navy-700">Email:</span> {booking.customer_email || "Not provided"}</p>
-          <p><span className="font-medium text-navy-700">WhatsApp:</span> {booking.customer_whatsapp}</p>
+          <p className="break-all"><span className="font-medium text-navy-700">WhatsApp:</span> {booking.customer_whatsapp}</p>
         </div>
       </div>
 
       {/* Documents */}
-      <div className="card mb-6 p-5">
+      <div className="card mb-4 sm:mb-6 p-4 sm:p-5">
         <h3 className="mb-4 text-sm font-semibold text-navy-700">Documents</h3>
         {images.length === 0 ? (
           <div className="space-y-2 text-sm text-gray-500">
@@ -324,12 +362,25 @@ export default function BookingDetailPage() {
             {!booking.payment_screenshot_url && <p>No payment screenshot uploaded.</p>}
           </div>
         ) : (
-          <div className="grid gap-4 sm:grid-cols-3">
+          <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-3">
             {images.map((img) => (
-              <div key={img.path} className="overflow-hidden rounded-lg border border-gray-200">
-                <a href={img.url} target="_blank" rel="noopener noreferrer" className="block">
-                  <img src={img.url} alt={img.label} className="h-40 w-full object-cover hover:opacity-90 transition-opacity" />
-                </a>
+              <div
+                key={img.path}
+                className="overflow-hidden rounded-lg border border-gray-200"
+              >
+                <button
+                  onClick={() => setLightboxImage(img)}
+                  className="relative block w-full group"
+                >
+                  <img
+                    src={img.url}
+                    alt={img.label}
+                    className="h-44 sm:h-40 w-full object-cover group-hover:opacity-90 transition-opacity"
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/10 transition-colors">
+                    <ZoomIn size={24} className="text-white opacity-0 group-hover:opacity-100 transition-opacity drop-shadow" />
+                  </div>
+                </button>
                 <p className="border-t border-gray-100 bg-gray-50 px-3 py-2 text-center text-xs font-medium text-gray-600">
                   {img.label}
                 </p>
@@ -341,7 +392,7 @@ export default function BookingDetailPage() {
 
       {/* Actions */}
       {booking.status === "pending_review" || booking.status === "approved" ? (
-        <div className="card p-5">
+        <div className="card p-4 sm:p-5">
           <h3 className="mb-3 text-sm font-semibold text-navy-700">Admin Actions</h3>
           <div className="mb-4">
             <label className="label-text">Note (optional)</label>
@@ -353,13 +404,13 @@ export default function BookingDetailPage() {
             />
           </div>
 
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-col sm:flex-row gap-3">
             {booking.status === "pending_review" && (
               <>
                 <button
                   onClick={() => handleAction("approved")}
                   disabled={actionLoading !== null}
-                  className="btn-primary"
+                  className="btn-primary w-full sm:w-auto justify-center"
                 >
                   {actionLoading === "approved" ? (
                     <Loader2 size={16} className="animate-spin" />
@@ -371,7 +422,7 @@ export default function BookingDetailPage() {
                 <button
                   onClick={() => handleAction("rejected")}
                   disabled={actionLoading !== null}
-                  className="btn-danger"
+                  className="btn-danger w-full sm:w-auto justify-center"
                 >
                   {actionLoading === "rejected" ? (
                     <Loader2 size={16} className="animate-spin" />
@@ -386,7 +437,7 @@ export default function BookingDetailPage() {
               <button
                 onClick={() => handleAction("cancelled")}
                 disabled={actionLoading !== null}
-                className="btn-outline text-red-600 border-red-400 hover:bg-red-600 hover:text-white"
+                className="btn-outline text-red-600 border-red-400 hover:bg-red-600 hover:text-white w-full sm:w-auto justify-center"
               >
                 {actionLoading === "cancelled" ? (
                   <Loader2 size={16} className="animate-spin" />

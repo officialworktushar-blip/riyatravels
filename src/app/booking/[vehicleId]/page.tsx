@@ -217,21 +217,21 @@ export default function BookingPage() {
   }
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-8">
+    <div className="mx-auto max-w-3xl px-4 py-6 sm:py-8">
       {/* Back + Vehicle info */}
       <Link
         href="/"
-        className="mb-6 inline-flex items-center gap-1 text-sm font-medium text-navy-600 hover:text-gold-400 transition-colors"
+        className="mb-4 sm:mb-6 inline-flex items-center gap-1 text-sm font-medium text-navy-600 hover:text-gold-400 transition-colors min-h-[44px]"
       >
         <ArrowLeft size={16} /> Back to vehicles
       </Link>
 
-      <div className="mb-8 flex items-center gap-4 rounded-xl bg-white p-4 shadow-sm border border-gray-100">
-        <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-gray-100 text-2xl">
+      <div className="mb-6 sm:mb-8 flex items-center gap-3 sm:gap-4 rounded-xl bg-white p-3 sm:p-4 shadow-sm border border-gray-100">
+        <div className="flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-lg bg-gray-100 text-2xl shrink-0">
           {getTypeIcon(vehicle.type)}
         </div>
-        <div>
-          <h1 className="text-lg font-bold text-navy-700">{vehicle.name}</h1>
+        <div className="min-w-0">
+          <h1 className="text-base sm:text-lg font-bold text-navy-700 truncate">{vehicle.name}</h1>
           <div className="flex flex-wrap items-center gap-2">
             <span className={getTypeBadgeClass(vehicle.type)}>
               {vehicle.type.charAt(0).toUpperCase() + vehicle.type.slice(1)}
@@ -246,40 +246,74 @@ export default function BookingPage() {
       </div>
 
       {/* Step indicator */}
-      <div className="mb-8">
-        <div className="flex items-center justify-between">
-          {STEPS.map((label, i) => (
-            <div key={label} className="flex items-center">
-              <div
-                className={`flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold transition-colors ${
-                  i < step
-                    ? "bg-green-500 text-white"
-                    : i === step
-                      ? "bg-gold-400 text-navy-700"
-                      : "bg-gray-200 text-gray-500"
-                }`}
-              >
-                {i < step ? <Check size={14} /> : i + 1}
-              </div>
-              {i < STEPS.length - 1 && (
+      <div className="mb-6 sm:mb-8">
+        {/* Mobile: compact step indicator */}
+        <div className="sm:hidden">
+          <div className="flex items-center gap-1.5">
+            {STEPS.map((label, i) => (
+              <div key={label} className="flex items-center flex-1">
                 <div
-                  className={`mx-1 hidden h-0.5 w-8 sm:block ${
-                    i < step ? "bg-green-500" : "bg-gray-200"
+                  className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-bold transition-colors ${
+                    i < step
+                      ? "bg-green-500 text-white"
+                      : i === step
+                        ? "bg-gold-400 text-navy-700"
+                        : "bg-gray-200 text-gray-500"
                   }`}
-                />
-              )}
-            </div>
-          ))}
+                >
+                  {i < step ? <Check size={14} /> : i + 1}
+                </div>
+                {i < STEPS.length - 1 && (
+                  <div
+                    className={`mx-1 h-0.5 flex-1 rounded ${
+                      i < step ? "bg-green-500" : "bg-gray-200"
+                    }`}
+                  />
+                )}
+              </div>
+            ))}
+          </div>
+          <p className="mt-2 text-center text-xs font-medium text-navy-700">
+            Step {step + 1} of {STEPS.length}: {STEPS[step]}
+          </p>
         </div>
-        <div className="mt-2 hidden justify-between sm:flex">
-          {STEPS.map((label, i) => (
-            <span
-              key={label}
-              className={`text-xs ${i === step ? "font-semibold text-navy-700" : "text-gray-400"}`}
-            >
-              {label}
-            </span>
-          ))}
+
+        {/* Desktop: full step indicator */}
+        <div className="hidden sm:block">
+          <div className="flex items-center justify-between">
+            {STEPS.map((label, i) => (
+              <div key={label} className="flex items-center">
+                <div
+                  className={`flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold transition-colors ${
+                    i < step
+                      ? "bg-green-500 text-white"
+                      : i === step
+                        ? "bg-gold-400 text-navy-700"
+                        : "bg-gray-200 text-gray-500"
+                  }`}
+                >
+                  {i < step ? <Check size={14} /> : i + 1}
+                </div>
+                {i < STEPS.length - 1 && (
+                  <div
+                    className={`mx-1 h-0.5 w-8 ${
+                      i < step ? "bg-green-500" : "bg-gray-200"
+                    }`}
+                  />
+                )}
+              </div>
+            ))}
+          </div>
+          <div className="mt-2 flex justify-between">
+            {STEPS.map((label, i) => (
+              <span
+                key={label}
+                className={`text-xs ${i === step ? "font-semibold text-navy-700" : "text-gray-400"}`}
+              >
+                {label}
+              </span>
+            ))}
+          </div>
         </div>
       </div>
 
