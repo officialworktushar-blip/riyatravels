@@ -9,7 +9,7 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <nav className="sticky top-0 z-50 border-b border-[#C99A4A]/40 bg-gradient-to-r from-[#16233F] via-[#1E2C4F] to-[#16233F]">
+    <nav className="fixed top-0 z-50 w-full border-b border-[#C99A4A]/40 bg-gradient-to-r from-[#16233F] via-[#1E2C4F] to-[#16233F]">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4">
         <Link href="/" className="flex items-center" aria-label="Riya Travels home">
           <div className="overflow-hidden rounded-lg bg-white shadow-sm ring-1 ring-white/20">

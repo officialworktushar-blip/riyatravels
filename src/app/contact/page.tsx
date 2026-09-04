@@ -103,7 +103,7 @@ export default function ContactPage() {
         <div className="overflow-hidden rounded-2xl border border-gray-100 shadow-sm">
           <iframe
             title="Riya Travels location map"
-            src="https://www.google.com/maps?q=21,+Nr.+Pratapnagar+Bridge,+Lalbaug+Road,+Pratapnagar,+Vadodara,+Gujarat,+India&z=16&output=embed"
+            src="https://www.google.com/maps?q=22.2820,73.2066&z=17&output=embed"
             className="h-72 w-full sm:h-96"
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
