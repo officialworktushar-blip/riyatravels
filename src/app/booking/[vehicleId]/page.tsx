@@ -93,6 +93,13 @@ export default function BookingPage() {
     setError(null);
 
     try {
+      // Generate the booking id client-side up front. We pass it explicitly in
+      // the insert payload so we already know the id afterwards WITHOUT having
+      // to chain .select() on the insert — a RETURNING select is blocked by the
+      // "no public select on bookings" RLS policy (using (false)) and causes
+      // "new row violates row-level security policy for table 'bookings'".
+      const bookingId = crypto.randomUUID();
+
       let licenseFrontUrl = "";
       let licenseBackUrl = "";
       let paymentUrl = "";
@@ -148,27 +155,34 @@ export default function BookingPage() {
         paymentUrl = path;
       }
 
-      // Insert booking
-      const { data: inserted, error: insertErr } = await supabase
-        .from("bookings")
-        .insert({
-          customer_name: data.customerName,
-          customer_email: data.customerEmail || null,
-          customer_whatsapp: data.customerWhatsApp,
-          vehicle_id: vehicleId,
-          start_time: data.startTime,
-          end_time: data.endTime,
-          license_front_url: licenseFrontUrl || null,
-          license_back_url: licenseBackUrl || null,
-          payment_screenshot_url: paymentUrl || null,
-          payment_confirmation_method: data.paymentConfirmationMethod,
-          amount: data.amount,
-          status: "pending_review",
-        })
-        .select("id")
-        .single();
+      // Insert booking (no .select() chained — see comment above). We already
+      // know the id, so we only need the insert to succeed.
+      const { error: insertErr } = await supabase.from("bookings").insert({
+        id: bookingId,
+        customer_name: data.customerName,
+        customer_email: data.customerEmail || null,
+        customer_whatsapp: data.customerWhatsApp,
+        vehicle_id: vehicleId,
+        start_time: data.startTime,
+        end_time: data.endTime,
+        license_front_url: licenseFrontUrl || null,
+        license_back_url: licenseBackUrl || null,
+        payment_screenshot_url: paymentUrl || null,
+        // Normalize to the exact lowercase DB enum values ('screenshot' / 'whatsapp')
+        payment_confirmation_method:
+          data.paymentConfirmationMethod === "whatsapp" ? "whatsapp" : "screenshot",
+        amount: data.amount,
+        status: "pending_review",
+      });
 
       if (insertErr) {
+        // Log the full error so any RLS/policy/constraint issue is diagnosable.
+        console.error("Booking insert failed:", {
+          code: insertErr.code,
+          message: insertErr.message,
+          details: insertErr.details,
+          hint: insertErr.hint,
+        });
         // Handle overlap constraint violation
         if (insertErr.code === "23P01") {
           setError(
@@ -178,22 +192,21 @@ export default function BookingPage() {
           setStep(0);
           return;
         }
-        throw new Error(insertErr.message);
+        setError(insertErr.message || "Something went wrong. Please try again.");
+        return;
       }
 
       setSuccess(true);
 
       // Fire-and-forget admin notification (email + WhatsApp). Never blocks
       // the customer's success screen if this request fails.
-      if (inserted?.id) {
-        fetch("/api/notify-admin-new-booking", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ bookingId: inserted.id }),
-        }).catch((err: any) => {
-          console.error("Failed to notify admin of new booking:", err);
-        });
-      }
+      fetch("/api/notify-admin-new-booking", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ bookingId }),
+      }).catch((err: any) => {
+        console.error("Failed to notify admin of new booking:", err);
+      });
     } catch (err: any) {
       setError(err.message || "Something went wrong. Please try again.");
     } finally {
