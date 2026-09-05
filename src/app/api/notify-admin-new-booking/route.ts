@@ -67,22 +67,30 @@ async function sendEmail(booking: any, vehicle: any, startLabel: string, endLabe
       return { error: "ADMIN_NOTIFICATION_EMAIL not set" };
     }
 
+    const paymentLabel =
+      booking.payment_confirmation_method === "whatsapp"
+        ? "Sent via WhatsApp"
+        : "Screenshot Uploaded";
+
     const html = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #16233F;">
-        <h2 style="color: #C99A4A;">New booking request received</h2>
-        <p>A customer has submitted a new booking and it is awaiting your review.</p>
+        <h2 style="color: #C99A4A;">New Booking Request</h2>
+        <p>You have received a new booking request on Riya Travels.</p>
         <div style="background: #F7F7F5; padding: 16px; border-radius: 8px; margin: 16px 0;">
           <p><strong>Customer:</strong> ${booking.customer_name}</p>
           <p><strong>Email:</strong> ${booking.customer_email ?? "Not provided"}</p>
           <p><strong>WhatsApp:</strong> ${booking.customer_whatsapp}</p>
           <p><strong>Vehicle:</strong> ${vehicle.name} (${vehicle.type})</p>
-          <p><strong>From:</strong> ${startLabel}</p>
-          <p><strong>To:</strong> ${endLabel}</p>
+          <p><strong>Rental Period:</strong> ${startLabel} to ${endLabel}</p>
           <p><strong>Amount:</strong> ₹${booking.amount}</p>
+          <p><strong>Payment Method:</strong> ${paymentLabel}</p>
         </div>
-        <p><a href="${reviewLink}" style="color: #C99A4A;">Review this booking</a></p>
+        <p>Please review and confirm this booking in your admin panel.</p>
+        <p style="margin: 24px 0;">
+          <a href="${reviewLink}" style="display: inline-block; background: #C99A4A; color: #ffffff; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: bold;">Review Booking</a>
+        </p>
         <hr style="border: none; border-top: 1px solid #eee; margin: 24px 0;" />
-        <p style="font-size: 12px; color: #999;">This is an automated notification from Riya Travels.</p>
+        <p style="font-size: 12px; color: #999;">— Riya Travels Booking System</p>
       </div>
     `;
 
@@ -99,7 +107,7 @@ async function sendEmail(booking: any, vehicle: any, startLabel: string, endLabe
     await transporter.sendMail({
       from: `"Riya Travels" <${process.env.GMAIL_USER}>`,
       to: adminEmail,
-      subject: `New booking request — ${vehicle.name}`,
+      subject: `New Booking Request — ${vehicle.name} (${vehicle.type})`,
       html,
     });
 
@@ -112,14 +120,29 @@ async function sendEmail(booking: any, vehicle: any, startLabel: string, endLabe
 
 async function sendWhatsApp(booking: any, vehicle: any, startLabel: string, endLabel: string, reviewLink: string) {
   try {
-    const phone = process.env.CALLMEBOT_PHONE;
+    const phone = process.env.ADMIN_WHATSAPP_NUMBER || process.env.CALLMEBOT_PHONE;
     const apiKey = process.env.CALLMEBOT_APIKEY;
     if (!phone || !apiKey) {
-      console.warn("CALLMEBOT_PHONE or CALLMEBOT_APIKEY not set; skipping WhatsApp notification.");
+      console.warn("ADMIN_WHATSAPP_NUMBER/CALLMEBOT_PHONE or CALLMEBOT_APIKEY not set; skipping WhatsApp notification.");
       return { error: "CallMeBot env vars not set" };
     }
 
-    const message = `New booking request! ${booking.customer_name} wants ${vehicle.name} (${vehicle.type}) from ${startLabel} to ${endLabel}. Amount: ₹${booking.amount}. Review: ${reviewLink}`;
+    const paymentShort =
+      booking.payment_confirmation_method === "whatsapp"
+        ? "Sent via WhatsApp"
+        : "Screenshot";
+
+    const message = [
+      "📋 New Booking Request — Riya Travels",
+      "",
+      `Customer: ${booking.customer_name}`,
+      `Vehicle: ${vehicle.name} (${vehicle.type})`,
+      `Period: ${startLabel} – ${endLabel}`,
+      `Amount: ₹${booking.amount}`,
+      `Payment: ${paymentShort}`,
+      "",
+      `Please check your admin panel to review and confirm: ${reviewLink}`,
+    ].join("\n");
 
     const url =
       `https://api.callmebot.com/whatsapp.php?phone=${encodeURIComponent(phone)}` +

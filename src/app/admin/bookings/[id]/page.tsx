@@ -185,6 +185,8 @@ export default function BookingDetailPage() {
   }
 
   const vehicle = booking.vehicle;
+  const paymentMethod =
+    booking.payment_confirmation_method ?? "screenshot";
 
   const ADMIN_WHATSAPP = "918490048239";
 
@@ -354,12 +356,33 @@ export default function BookingDetailPage() {
 
       {/* Documents */}
       <div className="card mb-4 sm:mb-6 p-4 sm:p-5">
-        <h3 className="mb-4 text-sm font-semibold text-navy-700">Documents</h3>
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+          <h3 className="text-sm font-semibold text-navy-700">Documents</h3>
+          <span
+            className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold ${
+              paymentMethod === "screenshot"
+                ? "border-gold-200 bg-gold-50 text-gold-600"
+                : "border-green-200 bg-green-50 text-green-700"
+            }`}
+          >
+            {paymentMethod === "screenshot" ? "Payment via Screenshot" : "Payment via WhatsApp"}
+          </span>
+        </div>
+
+        {paymentMethod === "whatsapp" && (
+          <div className="mb-4 rounded-lg border border-green-200 bg-green-50 p-4 text-sm text-green-800">
+            Customer chose to send payment proof via WhatsApp — please check
+            your WhatsApp for their message before approving this booking.
+          </div>
+        )}
+
         {images.length === 0 ? (
           <div className="space-y-2 text-sm text-gray-500">
             {!booking.license_front_url && <p>No license front uploaded.</p>}
             {!booking.license_back_url && <p>No license back uploaded.</p>}
-            {!booking.payment_screenshot_url && <p>No payment screenshot uploaded.</p>}
+            {paymentMethod === "screenshot" && !booking.payment_screenshot_url && (
+              <p>No payment screenshot uploaded.</p>
+            )}
           </div>
         ) : (
           <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-3">

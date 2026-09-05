@@ -75,9 +75,13 @@ export default function ReviewStep({
             <span className={data.licenseBack ? "text-green-600" : "text-red-500"}>
               DL Back: {data.licenseBack ? "Uploaded" : "Missing"}
             </span>
-            <span className={data.paymentScreenshot ? "text-green-600" : "text-red-500"}>
-              Payment: {data.paymentScreenshot ? "Uploaded" : "Missing"}
-            </span>
+            {data.paymentConfirmationMethod === "whatsapp" ? (
+              <span className="text-green-600">Payment: Sent via WhatsApp</span>
+            ) : (
+              <span className={data.paymentScreenshot ? "text-green-600" : "text-red-500"}>
+                Payment Screenshot: {data.paymentScreenshot ? "Uploaded" : "Missing"}
+              </span>
+            )}
           </div>
         </div>
 

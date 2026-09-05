@@ -33,9 +33,11 @@ ADMIN_NOTIFICATION_EMAIL=admin@example.com   # Receives "new booking request" em
 NEXT_PUBLIC_SITE_URL=https://your-site.example.com   # Used to build the /admin/bookings/[id] review link
 CALLMEBOT_PHONE=91XXXXXXXXXX           # Admin WhatsApp number (with country code) for CallMeBot
 CALLMEBOT_APIKEY=your-callmebot-apikey # From callmebot.com free WhatsApp API setup
+ADMIN_WHATSAPP_NUMBER=918490048239     # Admin WhatsApp number — new-booking CallMeBot notification
+NEXT_PUBLIC_ADMIN_WHATSAPP_NUMBER=918490048239   # Same number, used by the client-side "send payment via WhatsApp" wa.me link
 ```
 
-> **Security**: `SUPABASE_SERVICE_ROLE_KEY`, `GMAIL_USER`, `GMAIL_APP_PASSWORD`, `ADMIN_NOTIFICATION_EMAIL`, `CALLMEBOT_PHONE`, and `CALLMEBOT_APIKEY` are server-only. They are never exposed to the browser. Public code only ever reads the `occupied_slots` view — never the `bookings` table directly (its public select is disabled by RLS).
+> **Security**: `SUPABASE_SERVICE_ROLE_KEY`, `GMAIL_USER`, `GMAIL_APP_PASSWORD`, `ADMIN_NOTIFICATION_EMAIL`, `CALLMEBOT_PHONE`, `CALLMEBOT_APIKEY`, and `ADMIN_WHATSAPP_NUMBER` are server-only. They are never exposed to the browser (only the `NEXT_PUBLIC_`-prefixed copy of the WhatsApp number is public, by design — it appears in the customer-facing wa.me link). Public code only ever reads the `occupied_slots` view — never the `bookings` table directly (its public select is disabled by RLS).
 
 ---
 
@@ -153,8 +155,8 @@ Postgres raises error code **`23P01`** (exclusion constraint violation) when an 
 1. **Time Slot** — pick date + start time + duration. Occupied times grey out. Live total + breakdown shown.
 2. **Details** — name, validated email, validated WhatsApp phone. Includes a hidden **honeypot** field for spam protection.
 3. **License** — upload front + back of driving license. Images are client-side compressed and converted to WebP before upload.
-4. **Payment** — shows the UPI ID (copy button) + QR scanner image from `app_settings`, then upload a payment screenshot.
-5. **Review & Submit** — uploads files to private storage buckets with randomized UUID filenames, inserts a `bookings` row with status `pending_review`.
+4. **Payment** — shows the UPI ID (copy button) + QR scanner image from `app_settings`, then the customer chooses how to share the receipt: **upload a payment screenshot**, or **send it via WhatsApp** instead (wa.me link pre-filled with their name/amount; no upload needed).
+5. **Review & Submit** — uploads files to private storage buckets with randomized UUID filenames (payment screenshot only when the upload option was chosen), inserts a `bookings` row with status `pending_review` and `payment_confirmation_method` = `screenshot` or `whatsapp`.
 
 ---
 
@@ -180,7 +182,7 @@ All `/admin/*` routes (except `/admin/login`) are protected by `src/middleware.t
 | Table | Key columns | Notes |
 |-------|-------------|-------|
 | `vehicles` | id, type, name, image_url, rate_per_hour, rate_per_day, min_hours, min_amount, extra_rate_per_hour, is_active | Public read via RLS |
-| `bookings` | id, customer_*, vehicle_id, start/end_time, amount, status, admin_note | Public insert only; admin manages status |
+| `bookings` | id, customer_*, vehicle_id, start/end_time, amount, status, admin_note, payment_confirmation_method | Public insert only; admin manages status |
 | `blocked_slots` | id, vehicle_id, start/end_time, reason | Admin only |
 | `app_settings` | id=1 (single row), upi_id, scanner_image_url, hero_image_url | Admin-managed |
 | `testimonials` | id, customer_name, rating (1-5), comment, is_active, created_at | Public read (active only); admin full access |
@@ -247,6 +249,8 @@ The route also sends a short WhatsApp summary to the admin using [CallMeBot's fr
 |----------|---------|
 | `CALLMEBOT_PHONE` | The admin's WhatsApp number **with country code** (e.g. `918490048239`). |
 | `CALLMEBOT_APIKEY` | The API key you received from CallMeBot. |
+| `ADMIN_WHATSAPP_NUMBER` | Admin's WhatsApp number. Preferred for the CallMeBot call (falls back to `CALLMEBOT_PHONE`). |
+| `NEXT_PUBLIC_ADMIN_WHATSAPP_NUMBER` | Same number, needed by the **client-side** payment step to build the customer-facing "send payment proof via WhatsApp" wa.me link (Next.js only exposes `NEXT_PUBLIC_*` vars to the browser). |
 
 > Both notifications fail silently if their env vars aren't set or the send errors — they only log and continue, so the booking submission is never affected.
 

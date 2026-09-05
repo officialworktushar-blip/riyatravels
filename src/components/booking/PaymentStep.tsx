@@ -4,9 +4,18 @@ import { useRef, useState } from "react";
 import { BookingData } from "@/app/booking/[vehicleId]/page";
 import { AppSettings } from "@/lib/types";
 import { formatCurrency } from "@/lib/utils";
-import { ChevronRight, ChevronLeft, Copy, Check, Image as ImageIcon, X, MessageCircle, Upload, Camera } from "lucide-react";
+import { ChevronRight, ChevronLeft, Copy, Check, X, MessageCircle, Upload, Camera } from "lucide-react";
 
-const MANAGER_WHATSAPP = "918490048239";
+const ADMIN_WHATSAPP =
+  process.env.NEXT_PUBLIC_ADMIN_WHATSAPP_NUMBER || "918490048239";
+
+function formatWhatsAppDisplay(num: string) {
+  const m = num.replace(/\D/g, "");
+  if (m.length === 12 && m.startsWith("91")) {
+    return `+91 ${m.slice(2, 7)} ${m.slice(7)}`;
+  }
+  return `+${m}`;
+}
 
 interface Props {
   settings: AppSettings | null;
@@ -28,7 +37,6 @@ export default function PaymentStep({
   const fileRef = useRef<HTMLInputElement>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState<"upload" | "whatsapp">("upload");
 
   const copyUPI = async () => {
     if (settings?.upi_id) {
@@ -45,14 +53,21 @@ export default function PaymentStep({
     updateData({ paymentScreenshot: file });
   };
 
-  const getManagerWhatsappUrl = () => {
-    const msg = encodeURIComponent(
-      `Payment Receipt for Booking%0A%0AAmount: ₹${amount}%0APlease find the payment screenshot attached.`
-    );
-    return `https://wa.me/${MANAGER_WHATSAPP}?text=${msg}`;
+  const getWhatsAppUrl = () => {
+    const name = data.customerName || "the customer";
+    const msg = [
+      "Hi, I just paid for my booking with Riya Travels.",
+      "",
+      `Name: ${name}`,
+      `Amount: ${formatCurrency(amount)}`,
+      "",
+      "Please find my payment screenshot attached.",
+    ].join("\n");
+    return `https://wa.me/${ADMIN_WHATSAPP}?text=${encodeURIComponent(msg)}`;
   };
 
-  const canProceed = paymentMethod === "whatsapp" || data.paymentScreenshot;
+  const canProceed =
+    data.paymentConfirmationMethod === "whatsapp" || !!data.paymentScreenshot;
 
   return (
     <div className="card p-4 sm:p-6">
@@ -104,32 +119,32 @@ export default function PaymentStep({
         <label className="label-text">How would you like to share your receipt?</label>
         <div className="mt-2 grid grid-cols-2 gap-3">
           <button
-            onClick={() => setPaymentMethod("upload")}
+            onClick={() => updateData({ paymentConfirmationMethod: "screenshot" })}
             className={`flex flex-col items-center gap-2 rounded-lg border-2 p-4 text-center transition-colors min-h-[80px] ${
-              paymentMethod === "upload"
+              data.paymentConfirmationMethod === "screenshot"
                 ? "border-gold-400 bg-gold-50 text-navy-700"
                 : "border-gray-200 bg-white text-gray-500 hover:border-gray-300 active:bg-gray-50"
             }`}
           >
             <Upload size={20} />
-            <span className="text-sm font-medium">Upload Screenshot</span>
+            <span className="text-sm font-medium">Upload Payment Screenshot</span>
           </button>
           <button
-            onClick={() => setPaymentMethod("whatsapp")}
+            onClick={() => updateData({ paymentConfirmationMethod: "whatsapp" })}
             className={`flex flex-col items-center gap-2 rounded-lg border-2 p-4 text-center transition-colors min-h-[80px] ${
-              paymentMethod === "whatsapp"
+              data.paymentConfirmationMethod === "whatsapp"
                 ? "border-green-400 bg-green-50 text-navy-700"
                 : "border-gray-200 bg-white text-gray-500 hover:border-gray-300 active:bg-gray-50"
             }`}
           >
             <MessageCircle size={20} />
-            <span className="text-sm font-medium">Send to Manager</span>
+            <span className="text-sm font-medium">Send Screenshot on WhatsApp Instead</span>
           </button>
         </div>
       </div>
 
       {/* Upload screenshot section */}
-      {paymentMethod === "upload" && (
+      {data.paymentConfirmationMethod === "screenshot" && (
         <div className="mb-6">
           <label className="label-text">Payment Screenshot *</label>
           {preview ? (
@@ -165,20 +180,23 @@ export default function PaymentStep({
         </div>
       )}
 
-      {/* Send to Manager section */}
-      {paymentMethod === "whatsapp" && (
+      {/* Send via WhatsApp section */}
+      {data.paymentConfirmationMethod === "whatsapp" && (
         <div className="mb-6">
           <div className="rounded-lg border border-green-200 bg-green-50 p-4">
             <p className="mb-3 text-sm text-green-800">
-              Send your payment screenshot directly to our manager on WhatsApp. After sending, click Continue to proceed.
+              No problem! After paying, just send your payment screenshot to our
+              WhatsApp number{" "}
+              <span className="font-semibold">{formatWhatsAppDisplay(ADMIN_WHATSAPP)}</span>{" "}
+              along with your name, and we&apos;ll match it to your booking.
             </p>
             <a
-              href={getManagerWhatsappUrl()}
+              href={getWhatsAppUrl()}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 rounded-lg bg-green-600 px-4 py-3 text-sm font-medium text-white hover:bg-green-700 transition-colors min-h-[44px]"
             >
-              <MessageCircle size={16} /> Send to +91 84900 48239
+              <MessageCircle size={16} /> Open WhatsApp
             </a>
           </div>
         </div>

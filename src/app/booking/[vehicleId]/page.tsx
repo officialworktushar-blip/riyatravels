@@ -23,6 +23,7 @@ export interface BookingData {
   licenseFront: File | null;
   licenseBack: File | null;
   paymentScreenshot: File | null;
+  paymentConfirmationMethod: "screenshot" | "whatsapp";
   honeypot: string;
 }
 
@@ -52,6 +53,7 @@ export default function BookingPage() {
     licenseFront: null,
     licenseBack: null,
     paymentScreenshot: null,
+    paymentConfirmationMethod: "screenshot",
     honeypot: "",
   });
 
@@ -127,8 +129,11 @@ export default function BookingPage() {
         licenseBackUrl = path;
       }
 
-      // Upload payment screenshot
-      if (data.paymentScreenshot) {
+      // Upload payment screenshot (only when the customer chose the upload option)
+      if (
+        data.paymentConfirmationMethod === "screenshot" &&
+        data.paymentScreenshot
+      ) {
         const ext = data.paymentScreenshot.name.split(".").pop();
         const path = `payment-proofs/${crypto.randomUUID()}.${ext}`;
         const { error: uploadErr } = await supabase.storage
@@ -156,6 +161,7 @@ export default function BookingPage() {
           license_front_url: licenseFrontUrl || null,
           license_back_url: licenseBackUrl || null,
           payment_screenshot_url: paymentUrl || null,
+          payment_confirmation_method: data.paymentConfirmationMethod,
           amount: data.amount,
           status: "pending_review",
         })

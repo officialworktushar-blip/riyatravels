@@ -1,4 +1,5 @@
 export type VehicleType = "scooty" | "bike" | "car";
+export type PaymentMethod = "screenshot" | "whatsapp";
 export type BookingStatus =
   | "pending_review"
   | "approved"
@@ -32,6 +33,7 @@ export interface Booking {
   license_front_url: string | null;
   license_back_url: string | null;
   payment_screenshot_url: string | null;
+  payment_confirmation_method: PaymentMethod;
   amount: number;
   status: BookingStatus;
   admin_note: string | null;
@@ -84,6 +86,11 @@ export const BOOKING_STATUS_LABELS: Record<BookingStatus, string> = {
   approved: "Approved",
   rejected: "Rejected",
   cancelled: "Cancelled",
+};
+
+export const PAYMENT_METHOD_LABELS: Record<PaymentMethod, string> = {
+  screenshot: "Screenshot",
+  whatsapp: "WhatsApp",
 };
 
 export const DURATION_OPTIONS = [
