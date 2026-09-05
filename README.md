@@ -29,9 +29,13 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 GMAIL_USER=your-email@gmail.com
 GMAIL_APP_PASSWORD=your-app-password   # Google Account → Security → 2-Step Verification → App Passwords
+ADMIN_NOTIFICATION_EMAIL=admin@example.com   # Receives "new booking request" emails
+NEXT_PUBLIC_SITE_URL=https://your-site.example.com   # Used to build the /admin/bookings/[id] review link
+CALLMEBOT_PHONE=91XXXXXXXXXX           # Admin WhatsApp number (with country code) for CallMeBot
+CALLMEBOT_APIKEY=your-callmebot-apikey # From callmebot.com free WhatsApp API setup
 ```
 
-> **Security**: `SUPABASE_SERVICE_ROLE_KEY`, `GMAIL_USER`, and `GMAIL_APP_PASSWORD` are server-only. They are never exposed to the browser. Public code only ever reads the `occupied_slots` view — never the `bookings` table directly (its public select is disabled by RLS).
+> **Security**: `SUPABASE_SERVICE_ROLE_KEY`, `GMAIL_USER`, `GMAIL_APP_PASSWORD`, `ADMIN_NOTIFICATION_EMAIL`, `CALLMEBOT_PHONE`, and `CALLMEBOT_APIKEY` are server-only. They are never exposed to the browser. Public code only ever reads the `occupied_slots` view — never the `bookings` table directly (its public select is disabled by RLS).
 
 ---
 
@@ -215,6 +219,36 @@ All uploaded images are compressed and converted to WebP format for smaller file
 - The public booking form includes a **honeypot** field as basic spam protection.
 - License/payment paths use **randomized UUIDs** with no customer PII.
 - Images uploaded through admin (vehicles, hero) are compressed and converted to WebP before storage.
+
+---
+
+## Admin Notifications Setup
+
+When a customer submits a new booking (status `pending_review`), the admin is notified in two ways — by email and by WhatsApp — via the `POST /api/notify-admin-new-booking` route. The customer still sees their "Booking Request Received" screen immediately; these notifications fire in the background and never block the submission.
+
+### 1. Admin email notification
+
+The email uses the same Gmail SMTP setup as the customer confirmation email (`GMAIL_USER` / `GMAIL_APP_PASSWORD`), but is sent **to** the `ADMIN_NOTIFICATION_EMAIL` address instead of the customer.
+
+| Variable | Purpose |
+|----------|---------|
+| `ADMIN_NOTIFICATION_EMAIL` | The email address that receives "New booking request received" notifications. |
+| `NEXT_PUBLIC_SITE_URL` | Your public site origin. Used to build the direct review link to `/admin/bookings/[id]` in the notification. |
+
+### 2. Admin WhatsApp notification (CallMeBot — free)
+
+The route also sends a short WhatsApp summary to the admin using [CallMeBot's free WhatsApp API](https://www.callmebot.com/blog/free-api-whatsapp-messages/). No paid gateway is required.
+
+1. Go to **[callmebot.com's WhatsApp signup](https://www.callmebot.com/blog/free-api-whatsapp-messages/)** and follow the opt-in steps: send the activation message to the CallMeBot WhatsApp bot from your admin phone number.
+2. CallMeBot will reply with an **API key** and confirm your number.
+3. Set the two env vars below.
+
+| Variable | Purpose |
+|----------|---------|
+| `CALLMEBOT_PHONE` | The admin's WhatsApp number **with country code** (e.g. `918490048239`). |
+| `CALLMEBOT_APIKEY` | The API key you received from CallMeBot. |
+
+> Both notifications fail silently if their env vars aren't set or the send errors — they only log and continue, so the booking submission is never affected.
 
 ---
 

@@ -79,7 +79,6 @@ export default function LicenseUpload({ data, updateData, onBack, onNext }: Prop
             ref={frontRef}
             type="file"
             accept="image/*"
-            capture="environment"
             className="hidden"
             onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0], "front")}
           />
@@ -112,7 +111,6 @@ export default function LicenseUpload({ data, updateData, onBack, onNext }: Prop
             ref={backRef}
             type="file"
             accept="image/*"
-            capture="environment"
             className="hidden"
             onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0], "back")}
           />

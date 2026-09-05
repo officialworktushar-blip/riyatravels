@@ -144,19 +144,23 @@ export default function BookingPage() {
       }
 
       // Insert booking
-      const { error: insertErr } = await supabase.from("bookings").insert({
-        customer_name: data.customerName,
-        customer_email: data.customerEmail || null,
-        customer_whatsapp: data.customerWhatsApp,
-        vehicle_id: vehicleId,
-        start_time: data.startTime,
-        end_time: data.endTime,
-        license_front_url: licenseFrontUrl || null,
-        license_back_url: licenseBackUrl || null,
-        payment_screenshot_url: paymentUrl || null,
-        amount: data.amount,
-        status: "pending_review",
-      });
+      const { data: inserted, error: insertErr } = await supabase
+        .from("bookings")
+        .insert({
+          customer_name: data.customerName,
+          customer_email: data.customerEmail || null,
+          customer_whatsapp: data.customerWhatsApp,
+          vehicle_id: vehicleId,
+          start_time: data.startTime,
+          end_time: data.endTime,
+          license_front_url: licenseFrontUrl || null,
+          license_back_url: licenseBackUrl || null,
+          payment_screenshot_url: paymentUrl || null,
+          amount: data.amount,
+          status: "pending_review",
+        })
+        .select("id")
+        .single();
 
       if (insertErr) {
         // Handle overlap constraint violation
@@ -172,6 +176,18 @@ export default function BookingPage() {
       }
 
       setSuccess(true);
+
+      // Fire-and-forget admin notification (email + WhatsApp). Never blocks
+      // the customer's success screen if this request fails.
+      if (inserted?.id) {
+        fetch("/api/notify-admin-new-booking", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ bookingId: inserted.id }),
+        }).catch((err: any) => {
+          console.error("Failed to notify admin of new booking:", err);
+        });
+      }
     } catch (err: any) {
       setError(err.message || "Something went wrong. Please try again.");
     } finally {
