@@ -9,7 +9,7 @@ import {
   getTypeIcon,
   compressImage,
 } from "@/lib/utils";
-import { Plus, Pencil, Trash2, X, Loader2, Upload } from "lucide-react";
+import { Plus, Pencil, Trash2, X, Loader2, Upload, Check } from "lucide-react";
 
 const TYPE_FILTERS: { label: string; value: VehicleType | "all" }[] = [
   { label: "All", value: "all" },
@@ -41,6 +41,7 @@ export default function VehiclesPage() {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
@@ -67,6 +68,7 @@ export default function VehiclesPage() {
     setImageFile(null);
     setImagePreview(null);
     setError(null);
+    setSaved(false);
     setShowForm(true);
   };
 
@@ -90,6 +92,7 @@ export default function VehiclesPage() {
     setImagePreview(v.image_url);
     setImageFile(null);
     setError(null);
+    setSaved(false);
     setShowForm(true);
   };
 
@@ -209,9 +212,13 @@ export default function VehiclesPage() {
       }
     }
 
+    setSaved(true);
     setSaving(false);
-    setShowForm(false);
-    loadVehicles();
+    await loadVehicles();
+    setTimeout(() => {
+      setShowForm(false);
+      setSaved(false);
+    }, 1200);
   };
 
   const toggleActive = async (v: Vehicle) => {
@@ -536,8 +543,16 @@ export default function VehiclesPage() {
                 >
                   Cancel
                 </button>
-                <button type="submit" disabled={saving} className="btn-primary flex-1">
-                  {saving ? (
+                <button
+                  type="submit"
+                  disabled={saving || saved}
+                  className={`flex-1 ${saved ? "bg-green-600 text-white hover:bg-green-600" : "btn-primary"}`}
+                >
+                  {saved ? (
+                    <>
+                      <Check size={16} className="mr-1" /> Saved
+                    </>
+                  ) : saving ? (
                     <Loader2 size={16} className="animate-spin" />
                   ) : editing ? (
                     "Save Changes"
@@ -547,6 +562,16 @@ export default function VehiclesPage() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Saved popup */}
+      {saved && (
+        <div className="pointer-events-none fixed inset-x-0 bottom-6 z-[60] flex justify-center px-4">
+          <div className="flex items-center gap-2 rounded-full bg-green-600 px-5 py-3 text-sm font-semibold text-white shadow-xl">
+            <Check size={18} className="shrink-0" />
+            Saved
           </div>
         </div>
       )}

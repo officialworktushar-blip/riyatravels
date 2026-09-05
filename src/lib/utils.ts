@@ -137,7 +137,7 @@ export function getVehiclePricingDisplay(
   if (hasMinPackage && hasExtraRate) {
     return {
       primary: `Min ${vehicle.min_hours} hrs · ${formatCurrency(vehicle.min_amount)} prepaid`,
-      secondary: `${formatCurrency(extraRate)} / hr after ${vehicle.min_hours} hrs · extra hours charged by admin`,
+      secondary: `${formatCurrency(vehicle.rate_per_day)} / full day · ${formatCurrency(extraRate)} / hr after ${vehicle.min_hours} hrs`,
     };
   }
 
