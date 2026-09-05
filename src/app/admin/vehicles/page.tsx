@@ -313,7 +313,7 @@ export default function VehiclesPage() {
               </div>
               {v.min_hours > 0 && v.min_amount > 0 && (
                 <p className="mt-1.5 text-xs font-medium text-gold-500">
-                  Min {v.min_hours} hrs · {formatCurrency(v.min_amount)} prepaid
+                  Min {v.min_hours} hrs · {formatCurrency(v.min_amount)}
                   {v.extra_rate_per_hour && v.extra_rate_per_hour > 0
                     ? ` · ${formatCurrency(v.extra_rate_per_hour)}/hr after`
                     : ""}

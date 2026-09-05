@@ -103,7 +103,7 @@ export function getPricingSummary(vehicle: Vehicle, hours: number): string {
 
   if (hasMinPackage && hasExtraRate) {
     if (hours <= vehicle.min_hours) {
-      return `${vehicle.min_hours} hrs min · ${formatCurrency(vehicle.min_amount)} prepaid`;
+      return `${vehicle.min_hours} hrs min · ${formatCurrency(vehicle.min_amount)}`;
     }
     return `${vehicle.min_hours} hrs min (${formatCurrency(vehicle.min_amount)}) + ${hours - vehicle.min_hours}h × ${formatCurrency(extraRate)}/hr`;
   }
@@ -136,7 +136,7 @@ export function getVehiclePricingDisplay(
 
   if (hasMinPackage && hasExtraRate) {
     return {
-      primary: `Min ${vehicle.min_hours} hrs · ${formatCurrency(vehicle.min_amount)} prepaid`,
+      primary: `Min ${vehicle.min_hours} hrs · ${formatCurrency(vehicle.min_amount)}`,
       secondary: `${formatCurrency(vehicle.rate_per_day)} / full day · ${formatCurrency(extraRate)} / hr after ${vehicle.min_hours} hrs`,
     };
   }
